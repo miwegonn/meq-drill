@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d1016">
+<title>MEQ รวมดาว — ฝึกจำ</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌟</text></svg>">
+<style>
+:root{--bg:#0d1016;--pnl:#161a23;--pnl2:#1d222e;--ln:#2b3242;--tx:#e7eaf0;--dim:#959db0;
+--acc:#5eb3ff;--warn:#ffb454;--bad:#ff7b72;--good:#7ee787;--gold:#f5c451}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",Sarabun,sans-serif;
+-webkit-text-size-adjust:100%;line-height:1.6}
+.wrap{max-width:780px;margin:0 auto;padding:14px 14px 90px}
+h1{font-size:21px;margin:8px 0 2px;text-align:center}
+.sub{color:var(--dim);font-size:13px;text-align:center;margin-bottom:12px}
+.panel{background:var(--pnl);border:1px solid var(--ln);border-radius:14px;padding:14px 16px;margin:12px 0}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode{background:var(--pnl);border:1px solid var(--ln);border-radius:14px;padding:14px;text-align:left;color:var(--tx);
+font-family:inherit;cursor:pointer}
+.mode:hover{border-color:var(--acc)}
+.mode b{display:block;font-size:15.5px;margin:2px 0}
+.mode span{color:var(--dim);font-size:12.5px}
+.mode .ic{font-size:22px}
+.stat{display:flex;justify-content:space-between;font-size:13.5px;color:var(--dim)}
+.bar{height:8px;background:var(--pnl2);border-radius:6px;overflow:hidden;margin:6px 0 2px;display:flex}
+.bar i{display:block;height:100%}
+.bar .g{background:var(--good)} .bar .r{background:var(--bad)}
+.case{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--ln)}
+.case:last-child{border-bottom:0}
+.case .no{width:34px;height:34px;border-radius:10px;background:var(--pnl2);display:flex;align-items:center;justify-content:center;
+font-weight:700;font-size:14px;flex:0 0 auto}
+.case .no.done{background:#16321f;color:var(--good)} .case .no.part{background:#3a2a14;color:var(--warn)}
+.case .tx{flex:1;min-width:0;font-size:13.5px}
+.case .tx small{color:var(--dim);display:block}
+.case button{flex:0 0 auto}
+.chip{background:var(--pnl2);color:var(--dim);border:1px solid var(--ln);border-radius:16px;padding:6px 12px;
+font-size:12.5px;cursor:pointer;font-family:inherit}
+.chip.on{background:#13304a;border-color:var(--acc);color:var(--acc)}
+.chip.bad{border-color:#7a2f2a;color:var(--bad)}
+.top{display:flex;align-items:center;gap:10px;margin:4px 0 8px}
+.top h2{font-size:15.5px;margin:0;flex:1}
+.back{background:none;border:1px solid var(--ln);color:var(--dim);border-radius:10px;padding:6px 11px;cursor:pointer;font-family:inherit}
+.dots{display:flex;gap:4px;flex-wrap:wrap;margin:2px 0 10px}
+.dots i{width:16px;height:6px;border-radius:3px;background:var(--pnl2)}
+.dots i.g{background:var(--good)} .dots i.r{background:var(--bad)} .dots i.cur{background:var(--acc)}
+.prev{font-size:13px;color:var(--dim);margin:0 0 10px}
+.prev summary{cursor:pointer}
+.prev div{margin-top:6px;padding:8px 10px;border-left:2px solid var(--ln)}
+.info{background:#121c28;border:1px solid #2c6183;border-radius:12px;padding:11px 13px;font-size:14px;margin-bottom:12px}
+.info .lab{color:var(--acc);font-size:12px;font-weight:700;display:block;margin-bottom:3px}
+.open{background:var(--pnl2);border-radius:12px;padding:10px 13px;font-size:14px;margin-bottom:12px;color:var(--dim)}
+.q{font-size:17px;font-weight:700;margin:4px 0 12px}
+textarea{width:100%;min-height:70px;background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:10px;
+padding:10px 12px;font:inherit;font-size:14px;resize:vertical}
+textarea:focus{outline:none;border-color:var(--acc)}
+.btn{display:block;width:100%;background:var(--acc);color:#07131f;border:0;border-radius:12px;padding:12px;font-size:15px;
+font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px}
+.btn.ghost{background:var(--pnl2);color:var(--tx);border:1px solid var(--ln);font-weight:500}
+.ans{background:#16211a;border:1px solid #2e6b3f;border-radius:12px;padding:12px 14px;font-size:14.5px;margin-top:12px}
+.ans b{color:#c9f5cc}
+.grade{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.grade button{border-radius:12px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;background:var(--pnl2)}
+.grade .no{border:1px solid rgba(255,123,114,.6);color:#ffb3ad}
+.grade .ok{border:1px solid rgba(126,231,135,.6);color:#b9f5be}
+.keys{color:var(--dim);font-size:12px;text-align:center;margin-top:10px}
+.dx{font-size:20px;font-weight:800;color:var(--gold);margin:6px 0}
+.sum{text-align:center}
+.sum .big{font-size:42px;font-weight:800;margin:4px 0}
+.ref h3{font-size:15px;margin:2px 0 6px;color:var(--acc)}
+.ref .b{font-size:14px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+td{border-bottom:1px solid var(--ln);padding:7px 6px;vertical-align:top}
+td:first-child{color:var(--acc);font-weight:600;width:34%}
+.reset{background:none;border:0;color:var(--dim);text-decoration:underline;cursor:pointer;font-family:inherit;font-size:12.5px;margin-top:8px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+@media(max-width:480px){.modes{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+var CASES=[
+{n:1,t:"Edema",open:"ชายไทย 25 ปี บวมทั้งตัว 1 สัปดาห์",dx:"IgA nephropathy",clue:"ปัสสาวะสีล้างเนื้อ 'ช่วงที่เป็นหวัด' (synpharyngitic) + UA glomerular",steps:[
+{q:"ซักประวัติสำคัญ 4 ข้อ",a:"• ปัสสาวะ: สีล้างเนื้อ/โคล่า · เป็นฟอง · ออกน้อย\n• บวมเริ่มที่หนังตา (ไต) หรือขา · หอบ นอนราบไม่ได้\n• เจ็บคอ/แผลพุพองก่อนหน้า ห่างกี่วัน\n• อาการ SLE · NSAIDs/สมุนไพร · โรคตับ-หัวใจ · ครอบครัว"},
+{i:"ปัสสาวะสีน้ำล้างเนื้อ ออกน้อยลง · ขาบวม 2 ข้าง · หายใจเหนื่อย นอนหนุนหมอน 2 ใบ\nBP 160/90 · puffy eyelids · JVP 4 cm · fine crepitation · liver 3 cm · shifting dullness + · pitting edema 3+ · no sign of CLD",q:"Pertinent data",a:"**S:** 25 yo male, generalized edema 1 wk · oliguria · meat-wash urine (hematuria) · orthopnea\n**O:** BP 160/90 · puffy eyelids · fine crepitation (pulmonary edema) · ascites · pitting edema 3+ · no murmur, no CLD (ตัดหัวใจ/ตับ)"},
+{q:"ส่ง investigation เพิ่ม",a:"**UA + sediment** · UPCR/24-h protein · **BUN/Cr, electrolytes** · albumin, lipid · **CBC** · C3/C4, ASO, ANA · **CXR, EKG**"},
+{i:"UA: sp.gr 1.025, protein 4+, dysmorphic RBC, granular cast",q:"แปลผล UA เข้ากับภาวะ/กลุ่มโรคใด",a:"**Glomerular disease → nephritic–nephrotic syndrome** (hematuria + heavy proteinuria)"},
+{q:"DDx 2 โรค + ประวัติ/PE เฉพาะแต่ละโรค",a:"• **IgA nephropathy** — hematuria **1–3 วัน**หลัง URI · เป็นซ้ำ\n• **PSGN** — เจ็บคอ 1–3 wk / พุพอง 3–6 wk ก่อน · C3 ต่ำ\n• (รุ่นพี่) **Lupus nephritis** — ไข้เรื้อรัง ปวดข้อ · malar/discoid rash, oral ulcer"},
+{i:"ปัสสาวะสีล้างเนื้อในช่วงที่มีอาการเป็นหวัด",q:"คิดถึงโรคอะไร เพราะอะไร",a:"**IgA nephropathy** — hematuria เกิด**พร้อม** URI (synpharyngitic) ไม่ใช่หลังหายหลายสัปดาห์แบบ PSGN"},
+{q:"ส่ง investigation ยืนยัน",a:"**Kidney biopsy** — IF: mesangial IgA deposit"},
+{i:"Kidney biopsy = IgA nephropathy",q:"Specific + supportive treatment",a:"**Supportive:** ACEI/ARB (คุม BP + ลด proteinuria) · low salt · furosemide · เลี่ยง nephrotoxic · งดบุหรี่ · statin\n**Specific:** corticosteroid (เมื่อ proteinuria > 1 g/d หลัง supportive 3 เดือน) · crescentic → pulse methylpred + IV cyclophosphamide"}]},
+
+{n:2,t:"Jaundice",open:"ชายไทย 18 ปี เหลืองมากขึ้น 5 วัน",dx:"Acute hepatitis A",clue:"ไข้ต่ำนำมาก่อน (viral prodrome) → เหลือง ตับโตกดเจ็บ ไม่มี stigmata",steps:[
+{q:"ซักประวัติแยกสาเหตุเหลือง 5 ข้อ",a:"1 **viral prodrome**: ไข้ ปวดเมื่อย เบื่ออาหาร\n2 **cholestasis**: คัน อุจจาระซีด steatorrhea\n3 ประวัติผ่าตัดทางเดินน้ำดี (stricture)\n4 **alcohol, ยา/สมุนไพร/paracetamol**\n5 ครอบครัวโรคตับ/มะเร็ง · (+ ปวดท้อง ไข้หนาวสั่น = cholangitis)"},
+{i:"2 wk ก่อนไข้ต่ำๆ ซื้อยาลดไข้กินเอง ไข้ลดลง · 5 วันตาเหลือง ไม่ปวดท้อง อุจจาระปกติ ปัสสาวะเข้ม · ไม่ดื่มเหล้า ไม่สูบบุหรี่\nPE: BT 38, moderate jaundice",q:"ตรวจร่างกายที่เกี่ยวกับเหลือง",a:"**HEENT:** icteric sclera, KF ring, pale, thyroid\n**Abdomen:** mass, Murphy, liver span, fluid thrill/shifting dullness\n**Stigmata CLD:** spider nevi, palmar erythema, gynecomastia, clubbing\n**Portal HT:** dilated superficial veins · (asterixis)"},
+{i:"icteric sclerae, no spider nevi · liver 1 cm BCM, mild tender, smooth, rubbery · spleen not palpable, no CLD",q:"Lab 3 ข้อ + เหตุผล",a:"**CBC** — systemic inflammation, hemolytic anemia\n**LFT** — hepatocellular vs cholestatic\n**UA** — bilirubin/urobilinogen แยก obstructive vs hemolysis\n(+ PT/INR, viral serology)"},
+{i:"CBC + LFT เข้ากับ hepatitis",q:"Problem list 1 ข้อ",a:"**Acute hepatocellular jaundice**"},
+{q:"DDx 2 โรค",a:"1 **Acute viral hepatitis**\n2 **Acute biliary obstruction** (รุ่นพี่) / **paracetamol DILI**"},
+{q:"ส่งตรวจเพิ่ม 5 ข้อ",a:"**Viral serology HAV/HBV/HEV/HCV** (anti-HAV IgM, HBsAg, anti-HBc IgM) · HCV RNA · **US hepatobiliary** · ANA · ceruloplasmin (Wilson)"},
+{i:"Serology: Anti-HAV IgM positive",q:"Diagnosis",a:"**Acute hepatitis A infection**"},
+{q:"คำแนะนำการดูแล + ป้องกันผู้อื่น",a:"หายเองได้ รักษาตามอาการ · พักผ่อน ดื่มน้ำมากๆ · อาหารครบ 5 หมู่ ปรุงสุก · **งดเหล้า** · paracetamol ≤ 2 g/d\nป้องกัน: fecal–oral → **ล้างมือด้วยสบู่** หลังเข้าห้องน้ำ · แยกภาชนะ · ไม่ทำอาหารให้คนอื่น · ผู้สัมผัส: HAV vaccine"}]},
+
+{n:3,t:"Fever",open:"ชายไทยคู่ 20 ปี ไข้สูง 1 วัน (กรีดยาง สะเดา)",dx:"Dengue hemorrhagic fever",clue:"กลับมา: Hct 48 ขึ้น plt ต่ำ leukopenia + right pleural effusion",steps:[
+{q:"ซักประวัติเพิ่ม (13 บรรทัด)",a:"1 **อาชีพ** ลักษณะงาน 2 **ภูมิลำเนา/การท่องเที่ยว** (ป่า ชายแดน)\n3 ทุกระบบ: ตาแดง ตาเหลือง น้ำมูก แผลในปาก · ผื่น จุดเลือดออก แผล · ไอ หอบ เสมหะ · ใจสั่น · ถ่ายเหลว ปวดท้อง · ปัสสาวะแสบขัด/เลือด · ปวดหัว ชัก · ปวดข้อ\n4 โรคประจำตัว ยา 5 **ลักษณะไข้** หนาวสั่น 6 IVDU · (ลุยน้ำ สัตว์ คนรอบข้างป่วย)"},
+{i:"สะเดา สงขลา กรีดยาง · ไข้สูงลอย หนาวสั่น · เคยไข้เลือดออก 1 ปีก่อน เพื่อนบ้านเป็น · เมียเคยเป็นมาลาเรีย · 3 เดือนก่อนไปมาเลเซีย 2 เดือน (อยู่ในเมือง) · ไม่ลุยน้ำ ไม่สัมผัสสัตว์ · กรีดยางทุกวันตั้งแต่เช้ามืด",q:"ตรวจร่างกายเพิ่ม 5 ระบบ (ตาราง)",a:"**V/S** (สำคัญสุด): BT PR RR BP\n**HEENT:** pale, icteric, **injected conjunctiva**, LN\n**Resp:** breath sound, crepitation\n**Abdomen:** tender, liver span, splenomegaly, rash/eschar\n**Skin/Ext:** petechiae, purpura, ecchymosis, **eschar** (กดหาทุกซอก)\nDDx: **malaria · DHF · scrub typhus** (+ lepto)"},
+{i:"BT 37.2 · no pale, anicteric, no LN · abdomen soft, liver/spleen not palpable · no eschar, petechiae, ecchymosis",q:"Lab 2 อัน",a:"1 **CBC with differential count**\n2 **Blood smear for malaria**"},
+{i:"CBC ปกติ · malaria negative ×2",q:"Management เบื้องต้น",a:"**Supportive:** paracetamol 500 mg 1 tab prn q 4–6 h (ห้าม NSAIDs)\n**Try treat scrub typhus:** **doxycycline 100 mg 1×2 PO 7 d**\n**Advice:** พักผ่อน ดื่มน้ำมาก · ไข้สูงขึ้น หนาวสั่น ปวดท้อง คลื่นไส้อาเจียน กินไม่ได้ จุดเลือดออก → มา รพ."},
+{i:"ได้ doxycycline + paracetamol กลับบ้าน · กลับมาด้วยไข้สูง คลื่นไส้อาเจียน · liver span 14–16 cm (hepatomegaly)",q:"(คำถามหาย) 5.1 investigation · 5.2 initial management",a:"**Ix:** CBC → Hct, Hb, plt, WBC · LFT · BUN/Cr (AKI) · **NS1 Ag, dengue IgM/IgG** · tourniquet test\n**Mx:** off doxycycline & paracetamol · monitor V/S + urine output · **IV 5%D/NSS 1000 mL rate 80 mL/h** (maintenance) · admit + absolute bed rest"},
+{i:"Petechial rash · CBC: leukopenia, Hct 48 (ขึ้น), plt ต่ำลง · LFT ปกติ · BUN/Cr ขึ้นเล็กน้อย · NS1 weakly + · ได้ 5%DW 500 mL + bed rest · CXR",q:"CXR + Dx + management",a:"CXR: **meniscus sign = pleural effusion right lower lung zone**\nDx: **Dengue hemorrhagic fever** (fever + bleeding + plt <100k + plasma leakage: Hct ↑ >20%, effusion, ascites)\nMx: absolute bed rest · continue IV fluid · V/S q 2–3 h · monitor hemodynamic/sign of shock (hypotension, CRT, PP แคบ, AOC) · urine output q 1 h · CBC ซ้ำ"},
+{i:"สบายดีหลังรักษา 5 วัน กลับบ้าน",q:"คำแนะนำดูแล + ป้องกันโรค (5 บรรทัด)",a:"ปรับสิ่งแวดล้อมไม่ให้เป็นแหล่งยุงลาย: **ปิดฝาภาชนะใส่น้ำ · ใส่ทรายอะเบท · เปลี่ยนน้ำในแจกัน**\nทายากันยุง · นอนในมุ้ง · ถ้าต้องไปพื้นที่เสี่ยงใส่ชุดคลุมแขนขา · (paracetamol เท่านั้น · ติดซ้ำรุนแรงกว่า)"}]},
+
+{n:4,t:"FUO",open:"มีไข้สูงมา 10 วัน",dx:"Infective endocarditis with septic emboli",clue:"ไข้ + murmur + motor weakness grade 3 (emboli ไปสมอง) · echo เจอ vegetation",steps:[
+{q:"ซักประวัติ 5 ข้อ",a:"1 **Occupation** 2 **Hometown & traveling** 3 **Organ-specific symptoms** ทุกระบบ 4 **Underlying disease** (โรคลิ้นหัวใจ) 5 **Medications, IVDU** (+ ทำฟัน)"},
+{i:"มีไข้ร่วมกับปวดหัว อ่อนแรง · ไม่มีผื่น ไม่ปวดข้อ ไม่เดินลุยป่า ลุยน้ำ ไม่เลี้ยงสัตว์",q:"ตรวจร่างกาย 5 ข้อ",a:"1 **Vital signs** 2 **Heart** (murmur) 3 **Lung** 4 **Abdomen** (spleen) 5 **HEENT** · (+ neuro, peripheral stigmata: Janeway, Osler, splinter, Roth)"},
+{i:"motor weakness grade 3 · murmur grade 3 at right parasternal border, no heave/thrill · อื่นปกติ",q:"Investigation 5 ข้อ",a:"1 **Echocardiogram** 2 **CT brain** 3 **EKG** 4 **Hemoculture** (3 ชุด ก่อนยา) 5 **CXR**"},
+{q:"Specific diagnosis + เหตุผล",a:"**Infective endocarditis** — มี fever + murmur และ neurological deficit จาก **vegetation หลุดเป็น septic emboli**"},
+{i:"CXR + echocardiography: vegetation · Dx: infective endocarditis with septic emboli",q:"Specific treatment 2 ข้อ",a:"1 **IV antibiotic** ตาม organism 4–6 wk (empirical: ampicillin + cloxacillin + gentamicin — รุ่นพี่เขียน amoxicillin)\n2 **Surgery**"},
+{q:"ข้อบ่งชี้ผ่าตัดตาม ESC 5 ข้อ",a:"จำ **HF – Infection – Emboli**\n1 **Severe acute regurgitation + HF**/refractory pulmonary edema/cardiogenic shock\n2 **Local uncontrolled infection** (abscess, false aneurysm, fistula)\n3 **Persistent positive blood culture** despite appropriate ATB\n4 Aortic/mitral NVE + **vegetation ≥ 10 mm** + severe stenosis/regurgitation (prevent emboli)\n5 **Isolated large vegetation > 15 mm** (> 30 mm)"}]},
+
+{n:5,t:"Fatigue",open:"หญิง 30 ปี เพลีย 1 เดือน ไม่เคยเป็นมาก่อน",dx:"Warm autoimmune hemolytic anemia",clue:"Hb ต่ำอย่างเดียว · smear: microspherocyte + polychromasia + nRBC ไม่มี agglutination · DAT/IAT +",steps:[
+{q:"ซักประวัติเพิ่มเติม",a:"Clarify เพลียช่วงไหน/ตลอดเวลา · **ไข้** (SLE, TB) · มีช่วงซึมเศร้า · **เบื่ออาหาร น้ำหนักลด** · หายใจหอบ นอนราบไม่ได้ · **เลือดออกง่าย** ประจำเดือนมาก (anemia) · ถ่ายเหลวดำ (GI bleed) · ปัสสาวะบ่อย/เป็นฟอง · **ประวัติครอบครัวเลือด (thalassemia)** · ผมร่วง ผื่น (SLE) · ปวดกล้ามเนื้อ · โรคประจำตัว ยา"},
+{i:"ไม่ไข้ ไม่มีน้ำมูก ไม่หอบ ไม่เจ็บหน้าอก ไม่ปวดท้อง ไม่ท้องเสีย ไม่แสบขัด ไม่ชา ไม่ชัก ไม่มีลักษณะ SLE ไม่ปวดข้อ ไม่มีประวัติครอบครัว ไม่มีจุดเลือดออก\nCBC: Hb ต่ำ, WBC normal, Plt normal",q:"การวินิจฉัย",a:"**Anemia**"},
+{q:"ส่ง initial lab",a:"**Peripheral blood smear** · **RBC indices** (+ reticulocyte count)"},
+{i:"CBC อีกรอบ + รูป blood smear (spherocyte, polychromasia, nRBC, ไม่มี agglutination)",q:"หา RPI + สรุปผล",a:"**RPI = (%retic × actual Hct / ideal Hct 45) ÷ correction factor (~2)**\nRPI < 2 = ineffective erythropoiesis · **RPI > 2 = effective → destruction / blood loss**"},
+{q:"บรรยาย peripheral blood smear",a:"RBC: **normochromic normocytic** · anisocytosis 2+ · poikilocytosis 1+ · **microspherocyte 2+** · **polychromasia 2+** · **nRBC**"},
+{q:"Dx อีกรอบ (ห้ามตัวย่อ)",a:"**Warm type autoimmune hemolytic anemia**"},
+{q:"เหตุผลประกอบ",a:"หญิง · subacute onset anemia · PBS เข้ากับ **hemolytic anemia** และพบ **microspherocyte** (ไม่มี agglutination → ไม่ใช่ cold)"},
+{q:"ส่งตรวจยืนยัน 3 อย่าง",a:"**Direct antiglobulin (Coombs) test** · **Indirect Coombs test** · **ANA titer**"},
+{i:"Direct Coombs +, Indirect Coombs +",q:"Pathophysiology",a:"**IgG autoantibody** จับ RBC → macrophage ที่ **splenic cord** จับ Fc → กินบางส่วน → spherocyte → **extravascular hemolysis**"},
+{q:"การรักษา",a:"Work-up etiology → treat underlying\n1st line: **prednisolone 1 mg/kg/d** taper ใน 8–12 wk\n2nd line: splenectomy · rituximab · (rescue: **IVIG 1 g/kg × 2 d** ถ้า Hb < 7)\n**ก่อนให้ steroid:** CXR (TB) · HBV/HCV · stool strongyloides · sputum AFB · dental care"}]},
+
+{n:6,t:"Anemia",open:"(ต้นเคสหาย) stool exam พบไข่ hookworm + Trichuris trichiura",dx:"HbH disease + iron deficiency (hookworm, trichuriasis)",clue:"Hb typing A2A + H",steps:[
+{q:"ผู้ป่วยมีพฤติกรรมเสี่ยงอะไร",a:"1 **เดินเท้าเปล่าในพื้นที่สกปรก → hookworm** (ไชผ่านผิวหนัง)\n2 **กินผักสดล้างไม่สะอาด → Trichuris**\nAdvice: กินอาหารสุกสะอาด · รักษาสุขอนามัย · compliance การกินยา"},
+{q:"ซักประวัติอะไร (ใส่ไม่ยั้ง)",a:"Fatigue + ซีด: เหนื่อยง่าย ใจสั่น · ถ่ายดำ มูกเลือด ปวดท้อง · อยากกินของแปลก · ตัวเหลือง ปัสสาวะเข้ม · ครอบครัว thalassemia · เคยได้เลือด · อาหาร ยา"},
+{q:"กลไกการซีดในคนนี้",a:"**Thalassemia/Hemoglobinopathy** → imbalance α:β chain → RBC maturation ผิดปกติ → **ineffective erythropoiesis + hemolytic anemia**\n+ **hookworm/Trichuris → GI blood loss → iron deficiency**"},
+{q:"ส่ง lab อะไร",a:"**Hb typing** · **CBC** · **peripheral blood smear** (+ ferritin/iron study, retic)"},
+{i:"Hb typing: A2A + H (H%)",q:"วินิจฉัย + แปลผล Hb typing",a:"**Hemoglobin H disease** (มี HbH = β4)\nจำ: HbA α2β2 · HbA2 α2δ2 · HbF α2γ2 · Hb Bart's γ4 · **HbH β4**"},
+{q:"การรักษา: specific + supportive",a:"**Specific:** **albendazole** (hookworm 400 mg single · Trichuris 400 mg × 3 d) · blood transfusion keep Hb > 7 · **folic acid**\n**Supportive:** กินอาหารครบ · เลี่ยงอาหารเหล็กสูง (thal) · ไข้/ซีดลง/ปัสสาวะสีโค้ก → มา รพ.\n⚠️ รุ่นพี่ใส่ deferasirox — ไม่เหมาะ (ขาดเหล็กจากพยาธิ) · iron ให้เฉพาะ ferritin ต่ำ"}]},
+
+{n:7,t:"Arthritis",open:"ชาย 45 ปี เจ็บเข่า",dx:"Septic arthritis (S. aureus)",clue:"Gram stain: GPC in clusters",steps:[
+{q:"ซักประวัติ 10 ข้อ",a:"1 ปวดในข้อหรือรอบข้อ (articular vs non) 2 ปวด บวม แดง ร้อน (inflammatory) 3 เริ่มเมื่อไร (acute ≤ 6 wk / chronic > 6 wk) 4 กี่ข้อ (mono/oligo/poly) 5 ปวดกี่ข้าง symmetry 6 ตลอดเวลา/ช่วงๆ 7 ไข้ 8 ข้อติดตอนเช้า 9 เคยปวดข้ออื่นไหม 10 **เหล้า, IVDU**"},
+{i:"ผู้ป่วยเคยมีอาการปวดข้ออื่นมาก่อน แต่หายไปเองได้",q:"ตรวจร่างกาย 10 อย่าง",a:"**ดู:** แผล scar · แดง · ขยับ movement · deformity\n**คลำ:** tenderness · temperature · bony enlargement · crepitus · **ballottement test** (joint fluid)\n**Extra-articular:** tophi · rheumatoid nodule · ผื่น · oral ulcer · palpable purpura · Raynaud · poikiloderma"},
+{q:"Differential diagnosis 2 โรค",a:"1 **Gouty arthritis**\n2 **Septic arthritis** (ต้องอยู่ใน DDx acute arthritis เสมอ)"},
+{q:"จะเจาะข้อแต่ผู้ป่วยไม่ยอม ทำอย่างไร",a:"**Inform consent** อธิบายข้อดีข้อเสีย · ถ้ายังปฏิเสธ → **treat เป็น septic arthritis ไปก่อน**: **cloxacillin 2 g IV q 4–6 h** (รุ่นพี่เขียน 500 mg — น้อยไป) / **ceftriaxone 2 g IV OD**"},
+{i:"ผู้ป่วยยอมเจาะ ผลย้อมเชื้อตามรูป",q:"บรรยาย slide + เชื้อที่พบ",a:"**Gram-positive cocci in cluster** → ***Staphylococcus aureus*** · Tx: **cloxacillin**"}]},
+
+{n:8,t:"Arthritis",open:"ชายวัย 70 ปี ปวดเข่าข้างซ้าย 1 วัน (+ ปัสสาวะแสบขัด 1 wk, DM คุมไม่ได้)",dx:"Septic arthritis จาก UTI (GNB, E. coli)",clue:"urine G/S: GNB · synovial WBC 30,000 PMN 90% · synovial G/S ไม่พบเชื้อ",steps:[
+{q:"(คำถามหาย) ซักประวัติ + problem list + PE",a:"ซักเหมือนข้อ 7 (10 ข้อ)\n**Problem list:** acute monoarticular arthritis · poorly controlled DM (immunocompromised)\n**PE:** ดู (scar, redness, movement, deformity) · คลำ (tender, temp, bony, crepitus, ballottement) · extra-articular"},
+{i:"ballottement test positive · เข่ากดเจ็บ บวม แดง อุ่น · limit of movement, no crepitus",q:"DDx + investigation",a:"DDx: **gouty arthritis · septic arthritis**\nIx: 1 **arthrocentesis + synovial fluid analysis** (cell, diff, gram stain) 2 **CBC** 3 **urine gram stain & culture** 4 **UA** 5 **hemoculture**"},
+{i:"UA: WBC เยอะๆ · urine G/S: gram negative bacilli · synovial WBC 30,000 (N 90%) · synovial G/S: ไม่พบ",q:"Dx + pathogenesis",a:"**Septic arthritis** (G/S ไม่พบเชื้อ ไม่ตัด septic)\n**UTI (pyelonephritis) → bacteremia → hematogenous spreading to joint → septic arthritis**"},
+{q:"Treatment + advice",a:"**IV antibiotic: ceftriaxone 2 g IV OD 14 d** (+ cloxacillin จนได้ culture)\n**ระบายหนองในข้อ**: เจาะดูดซ้ำ/arthroscopy (รุ่นพี่ไม่ได้เขียน — ต้องใส่)\nAdvice: **glycemic control · alcohol cessation**"}]},
+
+{n:9,t:"Arthritis",open:"ชาย 65 ปี ปวดเข่า (ซ้าย 2 วัน, ดื่มเบียร์ทุกวัน, กิน HCTZ)",dx:"Acute gouty arthritis",clue:"Fresh smear: MSU crystal · uric acid 12 · Cr 2.2",steps:[
+{i:"ปวดเข่าซ้าย 2 วัน ไข้ต่ำๆ ปวด บวม แดง ร้อน พักแล้วดีขึ้น · เคยปวดข้อเท้า ข้อนิ้ว เป็นๆหายๆ · ดื่มเบียร์ทุกวัน · HT ทาน HCTZ",q:"(คำถามหาย) Problem list + DDx + investigation",a:"**Problem:** acute monoarthritis 2 d · chronic alcohol drinking · HT (HCTZ → hyperuricemia)\n**DDx:** gouty arthritis · (septic arthritis, chronic arthritis)\n**Ix:** arthrocentesis + synovial fluid (gram stain, cell, **fresh smear**) · CBC · BUN/Cr · UA · hemoculture · US joint"},
+{i:"Synovial fluid cloudy yellow WBC 22,000 PMN 95 · fresh smear: MSU crystal · culture pending · CBC WBC 10,200 PMN 90 · Cr 2.2 · uric acid 12",q:"แปลผล + treatment",a:"Synovial = **crystal-induced arthritis** (MSU: needle-shaped, strongly negative birefringence) · CBC leukocytosis PMN predominate · Cr 2.2 = CKD/chronic urate nephropathy\n**Tx:** 1 colchicine (low dose) หรือ **prednisolone** — **เลี่ยง NSAIDs (Cr 2.2)** 2 **ปรับยาลดความดัน: หยุด HCTZ** (→ losartan) 3 **alcohol cessation** 4 ส่งตรวจ uric acid หลังสงบ 5 **ULT หลัง acute flare หาย** (allopurinol เริ่มต่ำ + HLA-B*58:01)"},
+{q:"กลไกการเกิด hyperuricemia",a:"Imbalance ระหว่าง purine synthesis กับ uric excretion\n1 **Overproduction:** alcohol, high purine/fructose diet, HGPRT deficiency\n2 **Underexcretion:** **CKD**, ยา (**HCTZ**, calcineurin inhibitor, aspirin, ethambutol, pyrazinamide), **alcohol**"}]},
+
+{n:10,t:"Psychiatry",open:"หญิง 22 ปี นักศึกษา นอนไม่หลับ (กังวลตั้งแต่ฝึกสอน 8 เดือน)",dx:"Generalized anxiety disorder",clue:"ฝึกสอนจบ 6 เดือนแล้วยังกังวล · ไม่มีสมาธิ สอบไม่ผ่าน",steps:[
+{i:"8 เดือนก่อนไปฝึกสอน กังวลกลัวสอนไม่ดี กังวลจนพูดตะกุกตะกัก รู้สึกอาย กังวลจนนอนไม่หลับ กลัวโดนครูตำหนิ กลัวรถเสียไปโรงเรียนสาย\n6 เดือนก่อนฝึกสอนเสร็จแต่ยังกังวล กลัวประเมินผิดพลาด กังวลค่าใช้จ่าย กังวลจนไม่มีสมาธิ สอบไม่ผ่านหลายวิชา นอนไม่หลับ เหนื่อยง่าย",q:"Pathologic anxiety มีอะไรบ้าง + ตัวอย่างในผู้ป่วย",a:"**Excessive (เยอะ)** — กังวลจนพูดตะกุกตะกัก นอนไม่หลับ กังวลเรื่องที่ยังไม่เกิด\n**Persistent (นาน)** — ฝึกสอนจบแล้วยังกังวลอยู่\n**Disability (พัง)** — ไม่มีสมาธิ สอบไม่ผ่านหลายวิชา เหนื่อยง่าย"},
+{i:"ไม่มีโรคทางกาย ไม่ใช้สารเสพติด ไม่ดื่มชากาแฟ · ไม่มีโรคจิตเวชในครอบครัว · MSE: look anxious, relevant coherent, no delusion, no suicidal, no hallucination · PE/lab ปกติ",q:"การวินิจฉัย + เหตุผล",a:"**Generalized anxiety disorder** (DSM-5)\n1 อาการต่อเนื่อง ≥ 6 เดือน 2 กังวลมากควบคุมไม่ได้ 3 อาการ ≥ 3/6: เหนื่อยง่าย นอนไม่หลับ ไม่มีสมาธิ (+ กระสับกระส่าย หงุดหงิด ตึงกล้ามเนื้อ) 4 loss of function 5 ไม่ใช่โรคทางกาย/สาร 6 ไม่เข้ากับโรคจิตเวชอื่น"},
+{q:"Differential diagnosis + เหตุผล",a:"1 **Social phobia/social anxiety disorder** — กลัวอับอายการไปพูด/ฝึกสอน\n2 **Adjustment disorder** — เปลี่ยนแปลงพฤติกรรม/อารมณ์หลัง stressor แต่ควรหายภายใน 6 เดือนหลัง stressor จบ (รายนี้ไม่หาย)"},
+{i:"แพทย์วินิจฉัย Generalized anxiety disorder",q:"บอกวิธีการรักษา",a:"**Biological:** **SSRI** (fluoxetine, sertraline) ± benzodiazepine ระยะสั้น\n**Psychosocial:** 1 **psychoeducation** (อธิบายโรค สาเหตุ อาการ การรักษา พยากรณ์) 2 psychosocial intervention: **CBT**"}]},
+
+{n:11,t:"Psychiatry",open:"ชาย 22 ปี มาด้วยอาการก้าวร้าว (ได้ยินเสียงตำหนิ หวาดระแวง)",dx:"Schizophrenia",clue:"อาการ 1 ปี + loss of function · หยุดยาบ้า 2 ปีก่อนป่วย",steps:[
+{i:"ได้ยินเสียงคนอื่นพูดแต่ไม่เห็นคนพูด พูดถึงเรื่องตนเองถูกตำหนิซ้ำๆ · ไม่พูดกับใครเพราะกลัวคนอื่นจะมาล่วงรู้ความคิด · หวาดระแวงจะมีคนมาทำร้าย · กลัวคนอื่นมาควบคุมตัวเอง · ออกไปไหนน้อยลง เก็บตัว",q:"Clinical term 6 อาการ (30 คะแนน)",a:"1 **Auditory hallucination** 2 **Alogia** 3 **Thought broadcasting** 4 **Paranoid (persecutory) delusion** 5 **Delusion of being controlled** 6 **Asocial**"},
+{i:"1 ปีก่อนหูแว่ว หวาดระแวง ลาออกจากมหาวิทยาลัย ไม่ได้กินยาสม่ำเสมอ (ง่วง) · 6 เดือนก่อนเสียงบอกให้ทำร้ายตัวเอง เอาปากกากรีดแขน · 2 wk ก่อนก้าวร้าว · เสพยาบ้า 4 ปีก่อน หยุด 2 ปี\nMSE: poor hygiene, irrelevant speech, AH, persecutory delusion, no SI/HI, poor judgment/insight",q:"วินิจฉัย + เหตุผล (30 คะแนน)",a:"**Schizophrenia** (DSM-5)\nA ≥ 2/5 (อย่างน้อย 1 ใน 1–3) ≥ 1 เดือน: **delusions · hallucination · disorganized speech** · grossly disorganized/catatonic · negative symptoms\nB **loss of function** · C **≥ 6 เดือน** (prodromal + active + residual) · D ไม่เข้าโรคอื่น · E **ไม่ใช่สาร/ยา/โรคทางกาย**"},
+{q:"วินิจฉัยแยกโรคอีก 1 โรค + เหตุผล",a:"**Substance (methamphetamine)-induced psychosis** — เคยเสพ · แต่อาการ psychosis ควรหายภายใน 1 เดือนหลัง last dose (รายนี้หยุด 2 ปีก่อนมีอาการ)"},
+{q:"การรักษา (30 คะแนน)",a:"**Bio:** **antipsychotic** (risperidone, haloperidol) · ไม่กินยา → long-acting injection\n**Psycho-social:** 1 psychoeducation 2 psychosocial intervention 3 **group therapy** 4 **milieu therapy**\n(+ admit เพราะก้าวร้าว/ทำร้ายตัวเอง)"}]},
+
+{n:12,t:"Psychiatry",open:"(ต้นเคสหาย) เพลีย หดหู่ เบื่อ นอนไม่หลับ ไร้ค่า",dx:"Major depressive disorder",clue:"ซักตาม SIG E CAPS ≥ 5 นาน ≥ 2 wk",steps:[
+{i:"อาการ เพลีย หดหู่ เบื่อ นอนไม่หลับ ไร้ค่า รู้สึกตนเองทำอะไรก็ไม่ดี แต่เพื่อนร่วมงานบอกว่าไม่ได้ทำงานแย่",q:"อาการสำคัญ + technical terms",a:"หดหู่ = **depressed mood** · เบื่อ = **loss of interest/anhedonia** · เพลีย = **loss of energy** · นอนไม่หลับ = **insomnia** · ไร้ค่า = **guilt/worthlessness**\nMDD: **SIG E CAPS** — Sad, Interest, Guilt, Energy, Concentration, Appetite, Psychomotor, Sleep, Suicide ≥ 5/9 นาน ≥ 2 wk"},
+{q:"ซักประวัติเพิ่มเพื่อสนับสนุน diagnosis",a:"ถามไปตาม **criteria MDD**: ครบ SIGECAPS ไหม · นานเท่าไร (≥ 2 wk) · loss of function · ไม่ใช่สาร/โรคกาย · ไม่เคย manic/hypomanic"},
+{q:"ซักประวัติเพิ่มเพื่อช่วย differential diagnosis",a:"1 **เคยมีช่วงอารมณ์ดี/หงุดหงิดง่าย** (mania: DIG FAST → bipolar) 2 **ยาเสพติด ยา** 3 **โรคทางกาย** (thyroid) 4 **อาการ psychosis**\nDDx กลุ่ม: organic/substance · psychotic · mood (MDD, PDD, bipolar, cyclothymia) · adjustment · anxiety"},
+{q:"(ถ้าถาม) การรักษา MDD",a:"**Biological:** antidepressant (SSRI)\n**Psychosocial:** psychoeducation · **CBT** · interpersonal therapy · short-term psychodynamic · family therapy"}]},
+
+{n:13,t:"Psychiatry",open:"หญิงวัยรุ่น นักศึกษา ส่งตัวเข้า รพ. เพราะกินยาพารา 10 เม็ด (เครียดเลิกแฟน)",dx:"Adjustment disorder",clue:"กินนอนปกติ เศร้าบ้าง · เห็นแฟนเก่าโพสต์กับแฟนใหม่ → กินยา",steps:[
+{i:"2 สัปดาห์ก่อนเครียดเรื่องเลิกกับแฟน",q:"DDx 4 โรค",a:"1 **Major depressive disorder** 2 **Bipolar I or II with depressive episode** 3 **Borderline personality disorder** 4 **Adjustment disorder**"},
+{i:"เคยเป็นโรคซึมเศร้า 2 ปีก่อน รักษาหายแล้ว",q:"ซักประวัติเพื่อดูอาการอะไรบ้าง",a:"ซักตาม **criteria MDD** (SIGECAPS, ≥ 2 wk) + suicide risk (ตั้งใจ วางแผน ทำซ้ำ) + mania + สาร"},
+{i:"หลังเลิกกับแฟนเศร้าบ้าง กินได้ปกติ นอนปกติ · เห็นแฟนเก่าโพสต์รูปกับแฟนใหม่ เครียดจนปวดหัว เลยกินยาพารา 10 เม็ด",q:"วินิจฉัยอะไร เพราะอะไร",a:"**Adjustment disorder** (criteria)\nA เปลี่ยนแปลงพฤติกรรม/อารมณ์จาก stressor ภายใน **3 เดือน**\nB อาการข้อใดข้อหนึ่ง: ทุกข์เกินสัดส่วน · loss of function\nC ไม่เข้าโรคอื่น D ไม่ใช่ bereavement E เมื่อ stressor หมด อาการหายภายใน **6 เดือน**\n(ไม่ใช่ MDD เพราะกินนอนปกติ)"},
+{q:"การดูแลรักษาระยะสั้นและระยะยาว",a:"**Short term:** 1 psychosocial: **crisis intervention** (narrative story) 2 biological: antidepressant/benzodiazepine\n(+ ทางกาย: paracetamol level 4 h, LFT, NAC ถ้าเกินเส้น · suicide precaution)\n**Long term:** **CBT** · **group therapy** — เปลี่ยนแปลงการจัดการอารมณ์เมื่อเกิดปัญหา"}]},
+
+{n:14,t:"Weakness",open:"ชาย 50 ปี พ่อค้า สงขลา อ่อนแรงแขนขาซีกขวา 30 นาที",dx:"Acute ischemic stroke, left MCA (Broca aphasia)",clue:"1 wk ก่อนอ่อนแรง 5 นาทีหายเอง (TIA) · CT ปกติ INR 1.5 → rt-PA",steps:[
+{q:"ซักประวัติเพิ่ม 5 ข้อ",a:"1 **ตอนเกิดอาการกำลังทำอะไร (เวลาเริ่ม)** 2 **เคยมีอาการแบบนี้มาก่อน** 3 ปวดหัว คลื่นไส้อาเจียน ชัก 4 โรคประจำตัว 5 ดื่มเหล้า สูบบุหรี่"},
+{i:"ตอนเช้ากินข้าว อ่อนแรงแขนขาขวา พูดไม่คล่อง ได้คำสองคำ บางครั้งไม่พูดแต่ฟังรู้เรื่อง · ไขมัน ความดัน เบาหวาน รักษาไม่สม่ำเสมอ สูบจัด ดื่มสังสรรค์ · 1 wk PTA ออกกำลังกายแล้วอ่อนแรงแขนขาขวา 5 นาที หายเอง ไม่ได้ไปหาหมอ",q:"2.1 อาการ 1 wk ก่อน + 2.2 pathophysiology",a:"2.1 **Transient ischemic attack**\n2.2 มี **large vessel atherosclerosis** ทำให้เกิด **transient decrease cerebral blood flow**"},
+{q:"ปัจจัยเสี่ยงโรคหลอดเลือดสมอง 6 ข้อ",a:"1 **Male** 2 **Elderly** 3 **Uncontrolled DM/HT/DLP** 4 **Smoking** 5 **History of TIA** (6 alcohol)"},
+{q:"Lab investigation อะไรบ้าง",a:"1 **Blood sugar** 2 CBC, electrolyte 3 **PT, aPTT** 4 **EKG** 5 ultrasound carotid 6 **CT brain without contrast** (ด่วน) 7 metabolic work-up"},
+{i:"V/S normal BP 160/100 · E4V5M6 · Rt facial palsy UMN · motor 2/5 upper, 4/5 lower · DTR 1+/2+ · Babinski plantar flexion · clonus neg",q:"หลอดเลือดใดผิดปกติ",a:"**Middle cerebral artery** (left)"},
+{q:"6.1 พูดไม่ชัด ได้คำสองคำ ฟังรู้เรื่อง เรียกว่าอะไร · 6.2 พยาธิสภาพอยู่ที่ใด",a:"6.1 **Broca aphasia** (expressive, non-fluent)\n6.2 **Frontal lobe** (left inferior frontal gyrus)"},
+{q:"ทำไมแขนกับขาอ่อนแรงไม่เท่ากัน",a:"**Homunculus of motor system** — MCA เลี้ยงส่วน lateral (หน้า+แขน) · ขาอยู่ medial เลี้ยงโดย ACA → แขน > ขา"},
+{i:"CBC, electrolyte, EKG, CXR normal · blood sugar normal · CT scan normal · INR 1.5",q:"8.1 ระยะสั้น (1 บรรทัด) · 8.2 ระยะยาว (5 บรรทัด)",a:"8.1 **Reperfusion therapy: rt-PA 0.9 mg/kg (10% bolus + 90% drip in 1 hr)**\n8.2 1 **Rehabilitation** 2 **Secondary prevention**: lifestyle (Mediterranean diet, Na < 2.4 g/d, exercise ≥ 40 min 3–4 ×/wk, smoking cessation) · BP < 130/80 · LDL < 100 (atorvastatin 80) · glucose/HbA1c control · obesity · OSA · (+ antiplatelet)"}]},
+
+{n:15,t:"AOC",open:"ผู้ป่วย DM รักษาด้วย glipizide มาด้วยซึม",dx:"Sulfonylurea-induced hypoglycemia + Klebsiella UTI (sepsis) + AKI",clue:"blood sugar 20 · BUN 40 Cr 2 · urine G/S: encapsulated GNB",steps:[
+{q:"ซึมจากอะไรได้บ้าง 5 ข้อ",a:"**Extracranial:** hyperglycemia (DKA, HHS) · **hypoglycemia** · toxic\n**Intracranial:** acute ischemic stroke · **uremic encephalopathy** · **CNS infection**"},
+{q:"ส่งตรวจเพิ่มเติม",a:"1 **Blood glucose** 2 **BUN/Cr** 3 **CBC** 4 **CT brain NC** 5 **UA**"},
+{i:"CBC: RBC normal, WBC 16,000 PMN 80% · BUN 40 Cr 2 · blood sugar 20 mg/dL · UA: WBC numerous, glucose neg, protein 1+ · urine G/S: encapsulated GNB",q:"3.1 บรรยาย gram stain · 3.2 เชื้อคือตัวอะไร",a:"3.1 **Gram-negative bacilli with capsule**\n3.2 ***Klebsiella pneumoniae***"},
+{q:"Pathophysiology ของ hypoglycemia",a:"**Glipizide → ↑ insulin → fasting hypoglycemia** + AKI ทำให้ยาคั่ง + sepsis/กินได้น้อย"},
+{q:"แนวทางรักษา hypoglycemia",a:"**IV 50% glucose 50 mL push** · **DTX ซ้ำทุก 15 min** · (ถ้ามีประวัติดื่มเหล้า: **thiamine 100 mg IV** ก่อน กัน Wernicke)"},
+{q:"การวินิจฉัย",a:"**Sepsis-induced symptomatic hypoglycemia** (on glipizide) — เขียนรวม **AKI** ด้วย"},
+{q:"ปัจจัยส่งเสริม hypoglycemia",a:"**Glipizide** · **Sepsis → stress** · **AKI** (ยาคั่ง)"},
+{q:"หลักการให้ยา",a:"**Complicated UTI → ceftriaxone 2 g IV OD 14 d**\n**Symptomatic hypoglycemia:** 1 **hold glipizide** 2 **10% D/W drip 80 mL/h keep DTX > 100 mg/dL**"},
+{q:"ประเมิน vascular complication ของเบาหวาน 4 ข้อ",a:"1 **Monofilament test** 2 **ABI** (ankle-brachial index) 3 **ประเมิน fundus** 4 **วัด microalbuminuria**"},
+{q:"แนะนำวิธีป้องกัน hypoglycemia",a:"1 **Advise อาการ hypoglycemia** → กินของหวาน (ใจสั่น เหงื่อออก มือสั่น อ่อนเพลีย)\n2 **ถ้ากินอาหารได้น้อยให้หยุด glipizide**"}]},
+
+{n:16,t:"Oliguria",open:"ชายไทย 20 ปี อ่อนเพลีย ปัสสาวะน้อยลง 1 วัน ท้องเสีย 3 วัน",dx:"Acute watery diarrhea → prerenal AKI → ATN (uremic)",clue:"orthostatic 120/80 → 100/70 · ให้น้ำแล้วยังสับสน BUN/Cr ↑ → dialysis",steps:[
+{q:"4.1 ซักประวัติเกี่ยวกับปัสสาวะออกน้อย",a:"ท้องเสีย ถ่ายแบบไหน กินได้ไหม · ปัสสาวะแสบขัด/เลือด/ฟอง · ก่อนหน้านี้มีโรคติดเชื้อ/เป็นหวัด · เวียนหัว เป็นลม · มีไข้ · ดื่มน้ำเพียงพอ · ปริมาณปัสสาวะ · บวม · โรคประจำตัว"},
+{i:"3 วันก่อนปวดบิดรอบสะดือ หลังจากนั้น 2 ชม. ถ่ายเหลวเป็นน้ำ > 250 mL/ครั้ง วันแรก 8 ครั้ง ไม่อาเจียน ไม่ไข้ ดื่ม ORS 2 แก้ว · 1 วันก่อนถ่ายเหมือนเดิม อาเจียน หน้ามืด ลุกเดินไปห้องน้ำ ปัสสาวะลดเหลือครึ่งแก้ว · 10 ชม. ก่อนมา ปัสสาวะก้นแก้ว · ไม่มีโรค ไม่แพ้",q:"4.2 ตรวจร่างกาย",a:"1 **Orthostatic hypotension** 2 **Skin turgor** 3 **Vital signs** 4 **Dry lips & skin**"},
+{q:"4.3 ส่งตรวจทางห้องปฏิบัติการ",a:"1 **UA** 2 **BUN, Cr, electrolytes** 3 **CBC** 4 **urine Na⁺** 5 **FENa = (UNa × PCr) / (PNa × UCr) × 100**"},
+{i:"BP ตอนนอน 120/80 ตอนนั่ง 100/70 · ปัสสาวะ 300 mL/วัน · BUN/Cr เพิ่มขึ้น",q:"4.4 Problem list",a:"1 **Acute watery diarrhea** 2 **Acute kidney injury** 3 **Moderate dehydration** (orthostatic hypotension: SBP ↓ ≥ 20, DBP ↓ ≥ 10, PR ↑ ≥ 20)"},
+{q:"4.5 pathophysiology ของ AKI + พยาธิสภาพ",a:"**Acute diarrhea → dehydration → hypovolemia → low blood supply to glomeruli → prerenal AKI** → นาน → **ATN**\nATN: tubular cell necrosis หลุดลอก → muddy brown granular cast อุด tubule"},
+{i:"Treat ด้วย IV fluid แล้ว ยังมีอาการสับสน · Na⁺ 128 · BUN/Cr ยังคงเพิ่มขึ้นเรื่อยๆ",q:"5.1 แนวทางรักษา AKI + เหตุผล · 5.2 ให้ furosemide ไหม",a:"5.1 **Renal replacement therapy (dialysis)** — มี **uremic complication (uremic encephalopathy)** · (AEIOU)\nหลักจัดการ AKI: optimize hemodynamics (fluid, vasopressor) · หยุด nephrotoxic (ACEI, NSAIDs, aminoglycoside) · RRT เมื่อมีข้อบ่งชี้\n5.2 **ไม่ให้** — ผู้ป่วย**ไม่มี sign of volume overload**"}]},
+
+{n:17,t:"Hematemesis",open:"ชาย อาเจียนเป็นเลือดสด 2 แก้ว 3 ชม. ก่อนมา (ดื่มเหล้าทุกวัน 12 ปี)",dx:"Alcoholic cirrhosis with esophageal variceal bleeding",clue:"parotid enlargement, spider nevi, palmar erythema · EGD: varices F2 × 2 columns",steps:[
+{q:"สาเหตุ 3 ข้อ + ประวัติที่จะเจอ",a:"1 **Esophageal varices** — cirrhosis, chronic alcohol, chronic liver disease\n2 **Peptic ulcer perforation/bleeding** — NSAIDs, เคยเป็น gastric ulcer, chronic epigastric pain\n3 **Mallory–Weiss tear** — อาเจียนอย่างรุนแรง เลือดออกตามหลังการอาเจียน, alcoholism"},
+{i:"ไม่มีปวดท้อง มีถ่ายดำ · กินเหล้าครึ่งแบนทุกวัน 12 ปี · ไม่มีโรคประจำตัว ไม่มีประวัติโรคตับในครอบครัว",q:"คิดว่าเป็นอะไรมากที่สุด",a:"**Esophageal varices** (bleeding)"},
+{q:"ประเมินการเสียเลือดจากอะไร",a:"1 **Pulse rate** 2 **Blood pressure** 3 **Pulse pressure** 4 **Urine output** 5 **Mental status** 6 **Respiratory rate** (7 lactate, 8 orthostatic hypotension)"},
+{i:"BP ท่านอน 120/80 P 90 · ท่านั่ง 100/60 P 110",q:"เสียเลือดตาม hemorrhagic classification class ไหน เพราะอะไร",a:"**Class II (15–30%, 750–1,500 mL)** — **เริ่มมี orthostatic hypotension, PR > 100**\nI < 15% (< 750) · II 15–30% (750–1,500) · III 30–40% (1,500–2,000) BP ↓ PR > 120 · IV > 40% (> 2,000) anuria PR > 140"},
+{q:"ตรวจร่างกายเพิ่มที่ช่วยวินิจฉัย",a:"1 **HEENT: icteric sclera** 2 **sign of chronic liver disease**: bank-paper skin, **parotid gland enlargement**, axillary hair loss, gynecomastia, **palmar erythema**, testicular atrophy, **spider nevi** 3 **sign of portal HT**: caput medusae, ascites, splenomegaly"},
+{q:"ส่ง lab อะไรเพิ่ม",a:"1 **CBC** 2 **Coagulogram** 3 **LFT** 4 **BUN, Cr, electrolytes** 5 **EGD**"},
+{i:"parotid gland enlargement, spider nevi, palmar erythema · no HSM, no ascites · Hct 18% Hb 6.5 plt 98,000 · PT 18 (12) PTT 25 (24) · BUN 30 Cr 1 · AST 200 ALT 1xx ALP 2xx · EGD: esophageal varices F2 × 2 columns s/p banding ligation",q:"Definite diagnosis",a:"**Cirrhosis with esophageal varices bleeding** (alcoholic) s/p EVL"},
+{q:"การดูแลระยะสั้นและระยะยาว",a:"**Short term:** 1 NPO 2 **IV fluid resuscitation** (Acetar) 3 **Octreotide 50 µg IV bolus then drip 50 µg/h 3–5 d** 4 **re-EGD** 5 **Ceftriaxone 1 g IV OD 7 d**\n**Long term:** 1 **Propranolol** (keep HR 55–60, SBP ≥ 90) 2 **avoid hepatotoxic**: alcohol, herbal, paracetamol, NSAIDs 3 **vaccination**: HAV, HBV, pneumococcal, influenza 4 **surveillance HCC ± AFP q 6 mo**, EGD 5 nutrition 6 **HE prevention: lactulose**"}]},
+
+{n:18,t:"Hematemesis",open:"ชาย 35 ปี อาเจียนเป็นเลือด 3 แก้ว",dx:"Bleeding gastric ulcer (NSAIDs + H. pylori)",clue:"ปวดใต้ลิ้นปี่ กินน้ำขาวดีขึ้น + ซื้อยาแก้ปวดกิน · urease test +",steps:[
+{q:"นึกถึงโรคอะไร 3 โรค + ประวัติที่จะเจอ",a:"1 **Esophageal varices** — chronic alcohol, chronic liver disease\n2 **Peptic ulcer bleeding** — NSAIDs, chronic epigastric pain, smoking, steroid\n3 **Mallory–Weiss tear** — UGIB after vomiting, alcoholism"},
+{i:"ปวดท้องใต้ลิ้นปี่เป็นๆหายๆ กินยาน้ำขาวแล้วดีขึ้น · ไม่เหลือง ไม่ผอม สูบบุหรี่ ดื่มสุรา · ก่อนหน้านี้ซื้อยาแก้ปวดมากิน ไม่มีประวัติมะเร็งในครอบครัว",q:"นึกถึงโรคอะไรมากที่สุด",a:"**Peptic ulcer bleeding**"},
+{q:"ตรวจร่างกายประเมินความรุนแรงของการเสียเลือด",a:"1 **Vital signs**: BP, PR, RR, BT 2 **Signs of dehydration**: skin turgor, sunken eyeball, dry lip 3 **Orthostatic hypotension** 4 **Capillary refill**"},
+{i:"BP ท่านอน 120/80 P 90 · ท่านั่ง 100/60 P 110 · good conscious · pale conjunctiva, anicteric · heart/lung normal · abdomen soft not tender, no CLD stigmata · extremities warm",q:"ประเมินการเสียเลือดตาม hemorrhagic shock class + เหตุผล",a:"**Class II** — orthostatic hypotension, PR 100–120, BP ท่านอนปกติ"},
+{q:"ส่ง lab ประเมินการเสียเลือด 1 อย่าง",a:"**CBC → Hematocrit**"},
+{i:"CBC: Hb 8 Hct 26 · Plt 149,000",q:"ดูแลเบื้องต้นอย่างไร",a:"1 **NPO** 2 **IV fluid resuscitation** 3 **NG tube no. 18 for gastric lavage** เตรียม EGD 4 **Foley → keep UOP ≥ 0.5 mL/kg/h** 5 **record V/S q 1 h** keep SBP > 90, PR 60–120, RR 12–24 6 **Pantoprazole 80 mg IV bolus then drip 8 mg/h 72 h** (+ G/M, EGD ภายใน 24 h)"},
+{i:"EGD: gastric ulcer ที่ antrum · urease test: positive",q:"ป้องกัน gastric ulcer ซ้ำ 3 ข้อ",a:"1 **H. pylori eradication: triple therapy** (omeprazole + **amoxicillin 1,000 mg bid** + **clarithromycin 500 mg bid** 10–14 d) — หรือ bismuth quadruple\n2 **Advise smoking and alcohol cessation**\n3 **Avoid NSAIDs and herbal medications** · ใช้ยาตามแพทย์สั่ง"}]},
+
+{n:19,t:"Chest pain",open:"ชาย 45 ปี เจ็บหน้าอก 2 ชม.",dx:"Acute inferoposterior STEMI + RV infarction + complete heart block + cardiogenic shock",clue:"BP 80/60 PR 45 lung clear · STE II III aVF + CHB + ST↓ V2–V3",steps:[
+{q:"ภาวะเจ็บหน้าอกที่อันตรายถึงชีวิต 4 ข้อ",a:"1 **Acute coronary syndrome** 2 **Aortic dissection** 3 **Acute pulmonary embolism** 4 **Tension pneumothorax**"},
+{i:"เจ็บหน้าอก 2 ชม. ไม่หาย มึนเล็กน้อย · สูบบุหรี่วันละ 2 ซอง 20 ปี · DM HT DLP · BP 80/60 PR 45 good consciousness · no murmur, lung clear, no edema · EKG: ST elevated II, III, aVF + complete heart block + ST depressed V2, V3",q:"บรรยาย abnormal finding",a:"- **3rd degree AV block**\n- **ST elevation II, III, aVF** → ปกติมี reciprocal I, aVL\n- **ST depression V2, V3** → posterior wall (tall R + ST↓ V1–V2 = reciprocal)\nInf. wall STEMI → หา **RV infarction** (V3R, V4R) + **AV block** (RCA เลี้ยงทั้งคู่)"},
+{q:"Investigation ที่จำเพาะที่สุด",a:"**EKG V3R, V4R** (right-sided) — STE ≥ 1 mm = RV infarction"},
+{i:"ให้ EKG V4R + CXR",q:"การวินิจฉัยทั้งหมด",a:"**Acute inferoposterior STEMI with RV infarction, complete heart block, cardiogenic shock**"},
+{q:"Definite treatment 2 ข้อ",a:"1 **Primary percutaneous coronary intervention (PCI)**\n2 **Fibrinolysis**: streptokinase, rt-PA\n(+ temporary pacing, NSS bolus · ห้าม nitrate/morphine ใน RV infarct)"},
+{i:"ผู้ป่วยได้รับยา streptokinase",q:"ภาวะแทรกซ้อน 3 อย่าง",a:"1 **Arrhythmias** 2 **Free wall rupture & papillary muscle necrosis** 3 **Dressler syndrome**\nTimeline: 0–24 h VF/arrhythmia/HF · 1–3 d post-infarct fibrinous pericarditis · 3–14 d free wall rupture, tamponade, MR · > 2 wk Dressler\n(ยา SK: bleeding, hypotension, allergy)"},
+{q:"Secondary prevention",a:"**Lifestyle:** moderate exercise 30–60 min/d · **limit alcohol < 100 g/wk** · **smoking cessation** · Mediterranean diet\n**Underlying disease control:** HT · **LDL < 70 mg/dL** · DM (**HbA1c < 7%**)\n**Lifelong antiplatelet therapy**"}]},
+
+{n:20,t:"Hemoptysis",open:"ไอเป็นเลือดมา 5 วัน (ไอเรื้อรัง 2 เดือน น้ำหนักลด)",dx:"Pulmonary tuberculosis",clue:"coarse crackle both upper lobes · CXR cavity · AFB +ve × 3",steps:[
+{q:"6.1 ซักประวัติเพิ่มเติม",a:"ปริมาณ, duration ของเลือด · **fever** · ไอ เบื่ออาหาร **น้ำหนักลด** · **smoking & second-hand smoking** · **คนในครอบครัวเป็นวัณโรค**"},
+{i:"ไอเรื้อรัง 2 เดือน ไอเป็นเลือด 5 วัน ครั้งละ 0.5 แก้ว เสมหะไม่มาก สีขาว มีไข้ต่ำๆตอนกลางคืน น้ำหนักลด 5 kg",q:"6.2 ภาวะหรือโรคที่น่าจะเป็นได้ 4 โรค",a:"1 **TB disease** 2 **Lung cancer** 3 **Bronchiectasis** (4 lung abscess/melioidosis)"},
+{i:"PE: mild pale, no jaundice, no LN · lung: coarse crackle both upper lobes",q:"6.3 คิดถึงโรคอะไรมากที่สุด 2 โรค · 6.4 ส่งตรวจสำคัญ 3 อย่าง",a:"6.3 1 **Pulmonary TB disease** 2 **Bronchiectasis**\n6.4 1 **CXR** 2 **Sputum AFB** 3 **CBC**"},
+{i:"CXR: cavity · sputum AFB +ve × 3 · Dx: pulmonary TB",q:"6.6 วิธีการรักษา (ชื่อยา + ระยะเวลา)",a:"**2HRZE + 4HR**\n2 เดือนแรก: Isoniazid **5** + Rifampicin **10** + Pyrazinamide **20(–25)** + Ethambutol **15** mg/kg\n4 เดือนต่อ: Isoniazid + Rifampicin"},
+{i:"ให้ยาสูตร 2HRZE/4HR",q:"6.7 ผลข้างเคียงของยา",a:"**Isoniazid:** hepatitis, peripheral neuropathy (B6 def.)\n**Rifampicin:** red-orange discoloration of secretion, cholestatic hepatitis\n**Pyrazinamide:** hepatitis, hyperuricemia\n**Ethambutol:** optic neuritis (ตาบอดสีเขียวแดง)"},
+{i:"stat: 400 คน แบ่ง arm A 200 arm B 200 · arm A cure 150 · arm B cure 180",q:"6.8 relative risk ที่จะ cure ของ arm B เทียบกับ arm A",a:"RR = (180/200) ÷ (150/200) = 18/15 = **1.2**"}]},
+
+{n:21,t:"Hemoptysis",open:"ผู้ป่วยสูบบุหรี่วันละซองมา 40 ปี เคยรักษาวัณโรคปอดหายแล้ว · ไอเป็นเลือดสด",dx:"Infected bronchiectasis",clue:"CXR: honeycomb RUL + blunt CPA + meniscus right lower",steps:[
+{i:"1 สัปดาห์ก่อนไอ เสมหะขาวขุ่น ไม่ไข้ ไม่หอบเหนื่อย · 1 วันก่อนไอเป็นเลือดสด",q:"Differential diagnosis 3 โรค",a:"1 **Active pulmonary TB disease** 2 **Infected bronchiectasis** 3 **Lung cancer**"},
+{q:"การตรวจร่างกายที่ช่วยวินิจฉัยแยกโรค",a:"1 **Vital signs** 2 **HEENT: lymphadenopathy** 3 **Lung: trachea deviation / percussion** 4 **Clubbing finger** (bronchiectasis, lung cancer, lung abscess)"},
+{i:"CXR (PA erect)",q:"บรรยาย CXR + วินิจฉัย",a:"PA upright, optimal respiration · **honeycomb appearance at RUL** · **blunt costophrenic angle both sides** · **meniscus sign at right lower lung zone**\nDx: **Infected bronchiectasis**"},
+{q:"กลไกการไอเป็นเลือด",a:"**Recurrent respiratory tract infection → bronchial wall damage → abnormal bronchial dilate**\n**Chronic inflammation → bronchial artery structural change → vascular damage → vascular injury → hemoptysis**"},
+{q:"การส่งตรวจเพื่อวินิจฉัย",a:"**CT chest** (HRCT) · **pleural fluid analysis** (+ sputum G/S, culture, AFB)"},
+{q:"ดูแลรักษาอย่างไร",a:"- **Antibiotic: ceftazidime + levofloxacin**\n- **Mucolytics: bromhexine**\n- **Smoking cessation**\n- **Vaccination: influenza, pneumococcal, COVID**\n- **Pulmonary rehabilitation**"}]},
+
+{n:22,t:"Bleeding",open:"ผู้ป่วยหญิงมาด้วยปัญหาเลือดออกง่าย",dx:"Immune thrombocytopenia (ITP) with strongyloidiasis",clue:"plt ต่ำอย่างเดียว coag ปกติ · stool: rhabditiform larva",steps:[
+{q:"ซักประวัติเพิ่มเติม",a:"- **จุดเลือดออก, เลือดกำเดา, ประจำเดือน**\n- **เลือดออกในข้อ/ใต้ผิว**\n- **เริ่มมีอาการเมื่อไร**\n- **โรคประจำตัว ยาที่ใช้ประจำ** (aspirin, NSAIDs)\n- **ประวัติครอบครัวเลือดออกง่าย**"},
+{i:"ไม่มีผื่น ไม่ซีด ไม่เพลีย ประจำเดือนปกติ ไม่เดินเท้าเปล่า ไม่มีประวัติครอบครัว · HEENT, heart, lung, abdomen, extremities ปกติ",q:"ตรวจร่างกายเพิ่มเติม 5 ข้อ",a:"- **Malar rash, photosensitive area**\n- **Discoid rash**\n- **Oral mucosa**\n- **Splenomegaly**\n- **Arthritis**"},
+{i:"ไม่มีผื่น ผมไม่ร่วง ฯลฯ",q:"ส่ง lab อะไร 5 ข้อ",a:"**For Dx:** 1 **CBC with PBS** 2 **Coagulogram** 3 **Platelet aggregation test**\n**For etiology:** 1 **ANA titer** 2 **Viral serology HIV, HBV, HCV** 3 **Stool exam**"},
+{i:"CBC: PLT ต่ำ (isolated thrombocytopenia) · coagulogram ปกติ · stool exam ตามรูป (larva)",q:"วินิจฉัย",a:"**Immune thrombocytopenia with strongyloidiasis**"},
+{q:"ให้การรักษา (ชื่อยา ไม่ต้องเขียน dose)",a:"1 **Ivermectin** (ให้**ก่อน** steroid กัน hyperinfection)\n2 **Prednisolone**\n(รุ่นพี่เขียน pred ก่อน — ลำดับควรสลับ)"},
+{q:"แนะนำคนไข้อย่างไร",a:"- **รับประทานอาหารสุก สะอาด**\n- **รักษาสุขอนามัย ไม่เดินเท้าเปล่า**\n- **หากมีอาการ (เลือดออก) ไปพบแพทย์**\n- **ออกกำลังกาย**\n- **Advise ตัวโรค สาเหตุ อาการ การรักษา**"}]},
+
+{n:23,t:"Dyspnea",open:"ผญ 60 ปี หอบเหนื่อย นอนราบไม่ได้ 3 วัน",dx:"Acute decompensated HF — HFpEF (hypertensive heart disease)",clue:"BP 180/100 · PMI 5th ICS AAL heave S4 · LVEF 60% · LVH with strain",steps:[
+{q:"4.1 acute dyspnea เกิดจากอะไรได้บ้าง 3 ข้อ",a:"1 **Acute coronary syndrome** 2 **Pulmonary embolism** 3 **Acute heart failure** (4 DKA)"},
+{i:"orthopnea · crep both lower lungs · BP 180/100 · PMI at 5th ICS anterior axillary line, heave, S4",q:"4.2 problem list 2 ข้อ · 4.3 investigation",a:"4.2 1 **Acute dyspnea for 3 d** 2 **Acute heart failure with congestive symptom**\n4.3 1 **CXR** 2 **EKG** 3 **NT-proBNP** 4 **Echocardiogram**"},
+{i:"ภาพ CXR",q:"4.4 abnormal finding · 4.5 วินิจฉัย",a:"4.4 **Bilateral perihilar infiltration, Kerley B line** · **Cardiomegaly**\n4.5 **Acute decompensated HF**"},
+{i:"EKG (ตามรูป)",q:"4.6 แปลผล EKG",a:"Rate **300/3 = 100** bpm · rhythm **sinus tachycardia** · axis **−15° (normal)** ตามรุ่นพี่ (lead II เกือบ equiphasic ≈ −30°) · **ST depression in I, aVL (strain pattern)** · no RA/LA enlargement · **LVH (Sokolow–Lyon: SV1 + RV5/V6 ≥ 35)**"},
+{i:"CXR cardiomegaly with pulmonary edema · LVEF 60% no pericarditis no abnormal wall movement · EKG LVH with strain",q:"4.7 สูตร LVEF · 4.8 neurohormonal response 3 ข้อ",a:"4.7 **EF = (EDV − ESV) / EDV × 100**\n4.8 1 **↑ sympathetic system** 2 **↑ renin–angiotensin–aldosterone** 3 **↑ ANP**"},
+{q:"4.9 HF ชนิดไหน · 4.10 ปัจจัยกระตุ้น 10 ข้อ · 4.11 ให้ยาอะไร",a:"4.9 **Heart failure preserved EF (diastolic HF)**\n4.10 **CHAMPIT**: C ACS · H hypertensive emergency · A arrhythmia · M mechanical valve · P PE · I infection (IE, pericarditis) · T tamponade + **M**edication (inadequate diuretic) · **A**lcohol (cardiac beriberi) · **H**ypothyroidism (myxedema coma)\n4.11 **Furosemide** (+ nitroglycerin ถ้า BP สูง · ยาว SGLT2i)"}]},
+
+{n:24,t:"Fever & headache",open:"ข้อที่ 6 ผู้ป่วยมาด้วยอาการไข้ ปวดหัวมา 12 วัน",dx:"TB meningitis",clue:"อาเจียนพุ่ง + น้ำหนักลด 50 → 45 kg ใน 3 เดือน",steps:[
+{q:"ซักประวัติอะไรเพิ่ม 10 ข้อ + เหตุผล",a:"1 **vomiting, diplopia, AOC → signs of ↑ICP** 2 **hallucination → encephalitis** 3 **โรคประจำตัว → immunocompromised host** 4 **chronic cough, weight loss, night sweating → TB** 5 **photophobia, phonophobia** 6 **history of UTI** 7 **ประวัติติดเชื้อ HIV** 8 **head trauma** 9 **focal neurological deficits** 10 **seizure**"},
+{i:"ต่อมามีอาเจียนพุ่ง 2–3 รอบ · น้ำหนักลด 50 → 45 kg ใน 3 เดือน",q:"ตรวจร่างกายทางระบบประสาท 5 ข้อ + เหตุผล",a:"1 **Meningeal signs**: Kernig, stiffness of neck → meningeal irritation\n2 **Eye ground: papilledema** → chronic ↑ICP\n3 **EOM (CN III, IV, VI)** → อาจเป็นผลจาก ↑ICP\n4 **Glasgow coma score** → level of consciousness\n5 **Motor power** → weakness"},
+{q:"Investigation 3 ข้อ",a:"1 **Lumbar puncture for CSF analysis** 2 **Complete blood count** 3 **Sputum AFB** (+ CT brain ก่อน LP ถ้ามี ↑ICP)"},
+{i:"ผล LP → TB meningitis",q:"(ถ้าถาม) การรักษา",a:"**2HRZE + 10HR** + **dexamethasone/prednisolone**"}]},
+
+{n:25,t:"Fever & headache",open:"ชาย 16 ปี ม.4 หาดใหญ่ ไข้ ปวดหัว ซึม 1 วัน",dx:"Acute bacterial meningitis (S. pneumoniae) จาก CSF rhinorrhea",clue:"3 wk ก่อนมอไซค์ล้มสลบ 1 วัน มีน้ำใสไหลจากจมูก",steps:[
+{q:"โรคที่คิดถึงมากที่สุด 2 โรค + เหตุผล",a:"1 **Bacterial meningitis** 2 **Viral encephalitis** (acute fever + headache + drowsy)"},
+{i:"3 wk ก่อนล้มรถมอเตอร์ไซค์ สลบ 1 วัน หมอบอกไม่ต้องผ่าตัด มีน้ำใสๆไหลจากจมูก (CSF rhinorrhea) · GCS drop เล็กน้อย BT 38.3 PR 100 · cloudy consciousness · stiff neck + · neuro อื่นปกติ",q:"นึกถึงอะไรมากที่สุด · รองลงมา",a:"มากที่สุด: **Acute bacterial meningitis**\nรองลงมา: **Brain abscess**"},
+{q:"ส่ง lab อะไรเพิ่ม + เหตุผล",a:"1 **CT brain** — rule out space-occupying lesion เช่น brain abscess\n2 **Lumbar puncture for CSF analysis**\n3 **CBC**"},
+{i:"CT brain rule out abscess/epidural empyema: ปกติ · เตรียมเจาะ LP",q:"พยาธิกำเนิด meningitis ในผู้ป่วยรายนี้",a:"**Trauma → base of skull fracture → bacteria penetrate to meninges** (CSF leak, pneumococcus จาก nasopharynx)"},
+{q:"Complication ของการเจาะน้ำไขสันหลัง 3 ข้อ",a:"1 **Brain herniation** 2 **Spinal cord injury** 3 **Post-dural puncture headache** (+ bleeding, infection)"},
+{i:"CSF เข้ากับ bacterial meningitis · CSF G/S: gram-positive diplococci with capsule → S. pneumoniae",q:"Definite diagnosis · ยาที่ใช้",a:"**Acute bacterial meningitis from S. pneumoniae**\nยา: **ceftriaxone 2 g IV q 12 h + vancomycin** + **dexamethasone 0.15 mg/kg q 6 h × 4 d** (รุ่นพี่ไม่ได้ใส่ — ควรใส่)"},
+{q:"Complication ของโรค 3 อย่าง",a:"1 **Brain abscess** 2 **Seizure** 3 **Encephalitis** (+ **hearing loss**, hydrocephalus, SIADH)"}]},
+
+{n:26,t:"Fever & headache",open:"หญิงไทยคู่ 34 ปี ไข้ไม่หนาวสั่น ปวดหัว 2 สัปดาห์ (HIV+)",dx:"Cryptococcal meningitis in HIV",clue:"papilledema + CN VI palsy · OP 32 · India ink",steps:[
+{i:"ปวดขมับสองข้างร้าวไปท้ายทอย · ประวัติ HIV+ คลอดลูกคนที่ 2 แข็งแรงดี ไม่มีผิดปกติ",q:"6.1 ซักประวัติอะไรเพิ่มเติม",a:"1 **Signs of ↑ICP**: headache/vomiting, blurred vision 2 **Focal neurological deficit** 3 **อาการ chronic cough, weight loss, night sweating** (TB) 4 **Hx of head trauma** 5 **Seizure** (+ CD4, ART)"},
+{i:"ปวดหัวมาก อาเจียน 3 รอบ ปวดจนต้องตื่นกลางคืน เห็นภาพซ้อนแนวนอน ไม่อ่อนแรง ไม่ชัก",q:"6.2 ตำแหน่งพยาธิสภาพ · 6.3 ตรวจร่างกายเพิ่มเติม",a:"6.2 **Meninges**\n6.3 1 **Meningeal signs**: Kernig, stiffness of neck 2 **Vital signs** 3 **Neuro**: motor power, DTR, **cranial nerve → EOM**, **papilledema** 4 **Glasgow coma score**"},
+{i:"Skin: PPE · stiff neck + · papilledema · CN VI palsy (lateral gaze palsy)",q:"6.4 problem list 2 ข้อ · 6.5 เชื้ออะไรได้บ้าง",a:"6.4 1 **Chronic meningitis** 2 **HIV infection**\n6.5 1 **TB** 2 ***Cryptococcus neoformans***"},
+{q:"6.6 น้ำไขสันหลังส่งตรวจอะไรบ้าง",a:"1 **Cell count & differential** 2 **Gram stain** 3 **AFB** 4 **India ink preparation** (+ OP, protein, glucose, CrAg)"},
+{i:"LP: open pressure 32 cmH2O close 21 · CSF mononuclear 90% protein 40 glucose 50 (serum 75) · India ink (รูป)",q:"6.7 แปลผล CSF · 6.8 สรุปวินิจฉัย",a:"6.7 **High open pressure** · **↑ WBC with mononuclear predominate** · India ink: encapsulated yeast\n6.8 **Cryptococcal meningitis**"},
+{q:"6.9 รักษาอย่างไร",a:"- **Amphotericin B** (+ flucytosine)\n- หลังรักษาหายให้ **prophylaxis ด้วย fluconazole**\n- **Paracetamol**\n- **Therapeutic LP ลด ICP** (รุ่นพี่ไม่ได้ใส่ — สำคัญ) · ART หลัง 4–6 wk"}]},
+
+{n:27,t:"Cough",open:"ผู้ป่วยชาย 46 ปี ไอและเหนื่อย 5 วันก่อนมา รพ.",dx:"CAP (S. pneumoniae) with parapneumonic effusion",clue:"↓BS ↓TF dullness friction rub · FiO2 1.0 PaO2 56 · lancet diplococci",steps:[
+{q:"ซักประวัติเพิ่มเติม 5 ข้อ",a:"1 **ไข้** 2 **ลักษณะ/ปริมาณเสมหะ** 3 **อาการเจ็บหน้าอกเวลาหายใจเข้า** 4 **อาการไอเป็นเลือด เจ็บหน้าอก** 5 **นอนราบได้ไหม**"},
+{i:"5 วันก่อน ไข้ ไอ เหนื่อย เสมหะสีเขียว นอนราบได้ ไม่หอบตอนกลางคืน ไม่ได้ไปหาหมอ ไม่ไอเลือด กินพาราวันละ 2 เม็ด · 1 วันก่อนแย่ลง นอนราบไม่ได้ หอบมากขึ้น เจ็บชายโครงขวาเวลาหายใจเข้า · ไม่มีโรค ไม่มียา\nGA look dyspneic · BP 100/70 BT 38.6 HR 100 RR 30 SpO2 90% · lung ↓BS ↓TF dullness pleural friction rub",q:"การวินิจฉัยที่เป็นไปได้มากที่สุด · ส่ง lab ที่จำเป็น",a:"**Community-acquired pneumonia with suspected parapneumonic effusion**\nLab: 1 **CBC** 2 **ABG** 3 **CXR** 4 **Sputum gram stain**"},
+{i:"ER: O2 mask with bag FiO2 1.0 10 LPM · CBC WBC 14,000 PMN 72 L 20 band 6 · ABG on mask: pH 7.53 PaCO2 24 PaO2 56 HCO3 21 · CXR (รูป)",q:"4. อ่าน CXR · 5. แปลผล ABG",a:"4 **Homogeneous opacity at right lower lung zone with meniscus sign** · **blunt right costophrenic angle**\n5 **Oxygenation:** P/F = 56/1.0 = 56 → **severe hypoxemia** · **Ventilation:** hyperventilation · **Acid–base:** **respiratory alkalosis** (with metabolic compensation)"},
+{q:"6. กลไก hypoxemia + เหตุผล 2 ข้อ",a:"**Hypoxic hypoxemia — V/Q mismatch → shunt** (V = 0, right-to-left)\n1 มี **lobar pneumonia** → alveoli ไม่สามารถแลกเปลี่ยนก๊าซ\n2 **ได้ FiO2 100% แล้วยัง hypoxemia ไม่ดีขึ้น**"},
+{i:"sputum gram stain (รูป) · pleural fluid LDH ratio 0.8 protein ratio 0.6 pH 7.3 · Dx: CAP with parapneumonic effusion",q:"7. บรรยาย gram stain · 8. ยาปฏิชีวนะ",a:"7 **Gram-positive diplococci** (lancet) → S. pneumoniae\n8 1 **Levofloxacin 750 mg daily** หรือ 2 **Amoxicillin/clavulanate + azithromycin** (หรือ ceftriaxone + azithro)\n(effusion exudate pH ≥ 7.2 = uncomplicated)"}]},
+
+{n:28,t:"SLE",open:"ผู้ป่วยหญิงวัยกลางคน มีอาการบวมทั้งตัว",dx:"SLE with lupus nephritis (nephrotic)",clue:"discoid rash + ปัสสาวะเป็นฟอง + anemia + ANA +",steps:[
+{q:"(คำถามหาย) ซักประวัติแยกสาเหตุบวมทั้งตัว",a:"1 **อาการบวมเริ่มจากส่วนไหน** 2 **หัวใจ**: นอนราบได้ไหม หอบเหนื่อย 3 **ไต**: ปัสสาวะเป็นฟอง/เลือด 4 **endo**: หนาวง่าย น้ำหนักเพิ่ม 5 **ตับ**: ดื่มสุรา โรคตับ 6 **rheumato**: ปวดข้อ ผื่นแพ้แสง 7 **โรคประจำตัว** 8 **ยาที่ใช้ประจำ**"},
+{i:"discoid rash · นอนราบได้ ไม่มีหอบเหนื่อย · ปัสสาวะเป็นฟอง",q:"ปัสสาวะเป็นฟอง บ่งอะไร + กลไก + investigation",a:"**Nephrotic syndrome** — circulating immune complex deposit in glomeruli → injury endo/epithelium · podocyte injury · GBM loss of negativity → protein leak → proteinuria\nIx: **ANA titer · BUN/Cr · anti-dsDNA · CBC · urinalysis**"},
+{i:"ตรวจเลือด: anemia + ANA +ve",q:"วินิจฉัย SLE อย่างไร",a:"**SLICC (เก่า):** clinical ≥ 1 + lab ≥ 1 รวม ≥ 4 ข้อ\n**ใหม่ (EULAR/ACR 2019):** **ANA ≥ 1:80** (entry) + clinical & lab ≥ 10 คะแนน"},
+{q:"การรักษา · ก่อนให้ steroid · ข้อปฏิบัติ",a:"**Tx:** **prednisolone, pulse cyclophosphamide** · **hydroxychloroquine** · advice: sun protection / vaccination / exercise / no smoking\n**ก่อนให้ steroid:** **CXR → TB** · **viral serology HIV, HBV, HCV** · **stool exam for strongyloides** · varicella vaccine\n**ข้อปฏิบัติ:** กินอาหารสุกสะอาด · ใส่หน้ากาก · รักษาสุขอนามัย · ออกกำลังกาย weight bearing · หากมีไข้/ไม่สบายให้มาพบแพทย์"}]},
+
+{n:29,t:"Syncope",open:"หญิงไทย 60 ปี ใจสั่น วูบมา 1 วัน (DM HT DLP, glipizide, DTX 55)",dx:"Primary adrenal insufficiency (adrenal TB + active pulmonary TB)",clue:"hyperpigmented skin, BP 80/60, Na 127 K 5, cortisol ↓ ACTH ↑, CXR LUL",steps:[
+{i:"2 เดือนก่อนน้ำหนักลด 4 kg ไม่ได้ตั้งใจ เพลียมากขึ้น อ่อนแรง ทำงานไม่ได้ วูบบ่อย · 1 วันก่อนใจสั่นและวูบ กินน้ำหวานแล้วดีขึ้น · DM HT DLP 10 ปี: simvastatin, MFM 850 ×3, glipizide 5 ×2, enalapril 5 ×2, amlodipine 10 · DTX@ER 55 → 100",q:"(คำถามหาย) DDx 3 โรค + ซักประวัติ/PE แยกโรค",a:"1 **Thyrotoxicosis** 2 **Adrenal insufficiency** 3 **Glipizide-induced hypoglycemia**\n**AI:** ผิวดำขึ้น กินเค็มมากขึ้น ปวดกล้ามเนื้อ ขาดยา steroid · PE: hyperpigmentation, orthostatic HT, hypovolemia, cushingoid\n**Thyrotoxicosis:** เหงื่อออก ท้องเสีย hyperactivity insomnia · PE: HT, fine tremor, hyperreflexia, tachycardia\n**Glipizide:** ประวัติใช้ยา มีช่วงกินอาหารน้อย\n(significant weight loss · autonomic failure)"},
+{i:"GA: look tired, not dyspneic, hyperpigmented skin · BT 37 BP 80/60 HR 90 RR 12 · lung: fine crepitation @ LUL · others WNL",q:"Dx + investigation",a:"Dx: **Primary adrenal insufficiency**\nIx: 1 **electrolyte** 2 **BUN/Cr** 3 **morning cortisol** 4 **CXR** 5 **ACTH stimulation test** (รุ่นพี่เขียน dexamethasone suppression test — **ผิด**, อันนั้นของ Cushing)"},
+{i:"BUN/Cr 12/0.9 · K 5 (↑) Na 127 (↓) · CXR (LUL lesion) · morning cortisol low · ACTH increase",q:"Dx สุดท้าย · ยา · advice",a:"Dx: **Active pulmonary TB disease with extrapulmonary involvement (adrenal tuberculosis)**\nDrug: **2HRZE + 4HR** · **hydrocortisone** (crisis 100 mg IV → 50 mg q 6 h · rifampicin ต้องเพิ่ม dose) ± fludrocortisone\nAdvice: อธิบายตัวโรค · **ห้ามหยุดยาเอง กินยาสม่ำเสมอ** · แยกจากบุคคลอื่น 2 wk · ใส่หน้ากากอนามัย · sick day: เพิ่ม steroid"}]},
+
+{n:30,t:"Palpitation (English)",open:"ข้อ 6 หญิงไทย 20 ปี มา รพ. ด้วยอาการใจสั่น (palpitation)",dx:"Graves' disease",clue:"exophthalmos, moist skin, diffuse goiter with bruit",steps:[
+{q:"Organ system ที่ทำให้ใจสั่น 3 ระบบ + อาการสำคัญ",a:"1 **Cardiovascular**: chest pain, dyspnea on exertion, orthopnea\n2 **Endocrine**: hyperexcitability, weight loss, sweating, diarrhea\n3 **Respiratory**: dyspnea, pleuritic chest pain, syncope\n(หรือ psychiatric: panic/anxiety)"},
+{i:"อ่อนเพลีย น้ำหนักลด แม้จะกินอาหารปริมาณเท่าเดิม มีอาการใจสั่นที่ทำให้ limit activity นอกจากนั้นไม่มีอะไร ปกติดี",q:"ตรวจร่างกายอะไรเพื่อช่วยวินิจฉัย",a:"1 **Thyroid gland**: size, nodule, surface, **bruit**, **Pemberton's sign**\n2 **Skin**: moist skin\n3 **Eye**: **exophthalmos, lid lag, lid retraction**"},
+{i:"Exophthalmos, moist skin, diffuse thyroid enlargement with thyroid bruit → Graves' disease",q:"เลือก lab 2 อย่าง + ผลที่คาดว่าจะพบ (TSH, FT4, FT3, TT4, TT3, Tg, anti-TPO, anti-TG)",a:"**TSH → Decrease** · **Free T4 → Increase** (± Total T3 → Increase)"},
+{i:"ATD 2 เดือน · Day 0: TSH < 0.005 FT4 35 FT3 15 · Day 60: TSH < 0.005 FT4 15 FT3 5",q:"แปลผล TFT ที่ day 60",a:"**Subclinical hyperthyroidism** (pattern) — FT4/FT3 กลับมา **euthyroid** แล้ว แต่ TSH ยังกด เพราะ **TSH ฟื้นช้า (ได้ถึง 1 ปี)**"},
+{q:"ให้การรักษาต่ออย่างไร",a:"- **Taper dose 30–50% to maintenance dose of 5–10 mg (MMI)**\n- **Measure FT4 + T3 q 2–3 mo** (TSH can be low up to 1 yr)\n- **Maintain MMI for 12–18 mo**\n- **Advise กินยาอย่างสม่ำเสมอ** (+ ไข้ เจ็บคอ → หยุดยา ตรวจ CBC)"},
+{q:"รักษาครบ 2 ปี ผู้ป่วยอยากหยุดยา ท่านจะแนะนำอย่างไร",a:"ถ้าระดับ thyroid hormone อยู่ในช่วง **euthyroid แล้ว ให้หยุดยาได้** แต่**มีโอกาสกลับเป็นซ้ำ (relapse)** → สังเกตอาการ ใจสั่น น้ำหนักลด มือสั่น ร้อนง่าย → มาตรวจ\n(ตรวจ TRAb ก่อนหยุด · relapse → RAI หรือ surgery)"}]}
+];
+
+var TEMPLATES=[
+{h:"ซักประวัติ (ใช้ได้ทุกเคส)",b:"ลักษณะอาการหลัก: onset · duration · progression\n→ **อาการร่วมทุกระบบ** (organ-specific symptoms)\n→ **red flags** ของอาการนั้น\n→ **ปัจจัยเสี่ยง/exposure**: อาชีพ · ภูมิลำเนา · เดินทาง · สัตว์ · ลุยน้ำ · เพศสัมพันธ์ · IVDU\n→ **โรคประจำตัว · ยา · สมุนไพร · แพ้ยา**\n→ **ครอบครัว** → **เหล้า บุหรี่**"},
+{h:"ตรวจร่างกาย",b:"**V/S** (+ orthostatic, pulse pressure) → GA/consciousness → **HEENT** (pale, icteric, LN, conjunctiva) → Heart → Lung → **Abdomen** (liver span, spleen, ascites, tender) → **Skin/Extremities** (rash, petechiae, eschar, edema) → **Neuro** (GCS, meningeal sign, fundus, CN, motor)\nข้อ: **ดู–คลำ–ขยับ** + extra-articular"},
+{h:"Investigation",b:"**Basic**: CBC · BUN/Cr · electrolytes · UA · blood sugar · CXR · EKG\n→ **ยืนยัน Dx** (specific test)\n→ **หาสาเหตุ** (etiology)\n→ **ภาวะแทรกซ้อน / ก่อนเริ่มรักษา**"},
+{h:"Management",b:"**ABC / resuscitation** → **supportive** (fluid, O2, symptomatic)\n→ **specific** (ชื่อยา + dose + route + duration / หัตถการ)\n→ **monitor** (V/S, I/O, lab ซ้ำ)\n→ **ป้องกันภาวะแทรกซ้อน** → **advice + F/U**"},
+{h:"Advice",b:"อธิบาย**ตัวโรค สาเหตุ อาการ การรักษา**\n→ **ยา**: กินให้ครบ สม่ำเสมอ ห้ามหยุดเอง · side effect\n→ **warning signs** ที่ต้องกลับมา\n→ **ป้องกัน/lifestyle**: เหล้า บุหรี่ อาหาร ออกกำลังกาย สุขอนามัย\n→ **vaccine** → **นัด F/U**"},
+{h:"ก่อนให้ steroid / immunosuppressant (ข้อ 5, 22, 28)",b:"**CXR (TB)** · **HBV / HCV / HIV** · **stool exam หรือ ivermectin (strongyloides)** · vaccine เชื้อตาย (± varicella)"},
+{h:"กรอบตอบจิตเวช (ข้อ 10–13)",b:"Dx → **DSM criteria**: อาการ (กี่ข้อ) · **ระยะเวลา** · **loss of function** · ไม่ใช่สาร/ยา/โรคกาย · ไม่เข้าโรคอื่น\nTreatment = **Biological** (ยา) + **Psychosocial** (psychoeducation · CBT · group · family/milieu)\nระยะเวลาที่ต้องจำ: MDD ≥ 2 wk · GAD ≥ 6 mo · schizophrenia ≥ 6 mo (active ≥ 1 mo) · adjustment เริ่มใน 3 mo หายใน 6 mo · mania ≥ 1 wk"}
+];
+
+var NUMBERS=[
+["rt-PA","0.9 mg/kg (max 90) · 10% bolus + 90% drip 1 h · ≤ 4.5 h · INR ≤ 1.7 · BP < 185/110"],
+["Octreotide","50 µg IV bolus → 50 µg/h 3–5 วัน"],
+["Ceftriaxone ใน cirrhosis + UGIB","1 g IV OD 7 วัน"],
+["PPI ใน UGIB","80 mg IV bolus → 8 mg/h 72 h"],
+["Hemorrhagic class","I < 15% (< 750) · **II 15–30% (750–1,500): orthostatic, PR > 100** · III 30–40%: BP ↓ PR > 120 · IV > 40%: PR > 140"],
+["Orthostatic hypotension","SBP ↓ ≥ 20 · DBP ↓ ≥ 10 · PR ↑ ≥ 20"],
+["Hypoglycemia","50% glucose 50 mL IV push → 10% D/W 80 mL/h keep DTX > 100 · (alcohol: thiamine 100 mg IV)"],
+["Streptokinase","1.5 MU IV ใน 60 นาที"],
+["Dexamethasone (bacterial meningitis)","0.15 mg/kg IV q 6 h × 4 วัน"],
+["Ceftriaxone (meningitis)","2 g IV q 12 h + vancomycin"],
+["Hydrocortisone (adrenal crisis)","100 mg IV → 50 mg q 6 h"],
+["Prednisolone (AIHA)","1 mg/kg/d taper 8–12 wk"],
+["Cloxacillin (septic arthritis)","2 g IV q 4–6 h"],
+["Doxycycline (scrub typhus)","100 mg bid 7 วัน"],
+["TB (mg/kg)","H 5 · R 10 · Z 20–25 · E 15 → 2HRZE/4HR · TBM 2HRZE/10HR + steroid"],
+["Albendazole","hookworm 400 mg ครั้งเดียว · Trichuris 400 mg × 3 วัน"],
+["Methimazole","taper 30–50% → maintenance 5–10 mg · รวม 12–18 เดือน"],
+["H. pylori triple","PPI + amoxicillin 1 g bid + clarithromycin 500 bid 10–14 วัน"],
+["RPI","%retic × (Hct/45) ÷ maturation factor (~2) · > 2 = hemolysis/blood loss"],
+["FENa","(UNa × PCr) / (PNa × UCr) × 100 · < 1% prerenal"],
+["LVEF","(EDV − ESV) / EDV × 100"],
+["RR (ข้อ 20)","0.90 / 0.75 = 1.2"],
+["P/F ratio","PaO2 / FiO2 · < 100 = severe"],
+["Light's criteria","exudate: protein ratio > 0.5 · LDH ratio > 0.6 · LDH > 2/3 ULN"],
+["AKI dialysis (AEIOU)","Acidosis · Electrolyte (K) · Intoxication · Overload · Uremia (encephalopathy, pericarditis)"],
+["CHAMPIT (HF precipitants)","ACS · HT emergency · Arrhythmia · Mechanical valve · PE · Infection · Tamponade + Medication · Alcohol · Hypothyroid"],
+["Hb (thal)","A α2β2 · A2 α2δ2 · F α2γ2 · Bart's γ4 · **H β4**"]
+];
+
+
+var KEY='meqDrill.v1';
+var P={s:{},d:{}};
+try{var sv=JSON.parse(localStorage.getItem(KEY)||'null');if(sv){P.s=sv.s||{};P.d=sv.d||{};}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(P));}catch(e){}}
+var app=document.getElementById('app');
+function esc(t){return String(t).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
+function md(t){return esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>');}
+function sid(c,k){return 'c'+c.n+'s'+k;}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var x=a[i];a[i]=a[j];a[j]=x;}return a;}
+var ALL=[];CASES.forEach(function(c){c.steps.forEach(function(s,k){ALL.push({c:c,k:k});});});
+function st(it){return P.s[sid(it.c,it.k)];}
+function count(list){var o=0,m=0;list.forEach(function(it){var v=st(it);if(v===1)o++;else if(v===0)m++;});return {ok:o,miss:m,tot:list.length};}
+function caseItems(c){return c.steps.map(function(s,k){return {c:c,k:k};});}
+function pct(a,b){return b?Math.round(a*100/b):0;}
+
+var S={view:'home'};
+
+// ---------- หน้าแรก ----------
+function home(){
+  S={view:'home'};
+  var t=count(ALL), dxOk=CASES.filter(function(c){return P.d[c.n]===1;}).length;
+  var h='<h1>🌟 MEQ รวมดาว — ฝึกจำ</h1><div class="sub">30 เคส · '+ALL.length+' ข้อย่อย · เปิดทีละหน้าเหมือนวันสอบ</div>';
+  h+='<div class="panel"><div class="stat"><span>ข้อย่อยที่จำได้</span><span><b style="color:var(--good)">'+t.ok+'</b> · ยังไม่ได้ <b style="color:var(--bad)">'+t.miss+'</b> · ยังไม่ทำ '+(t.tot-t.ok-t.miss)+'</span></div>'+
+     '<div class="bar"><i class="g" style="width:'+pct(t.ok,t.tot)+'%"></i><i class="r" style="width:'+pct(t.miss,t.tot)+'%"></i></div>'+
+     '<div class="stat"><span>Dx map</span><span><b style="color:var(--good)">'+dxOk+'</b> / 30</span></div></div>';
+  h+='<div class="modes">'+
+     '<button class="mode" onclick="dxStart(false)"><div class="ic">🧭</div><b>Dx map 30 เคส</b><span>เห็นบรรทัดแรก → บอก Dx ปลายทาง</span></button>'+
+     '<button class="mode" onclick="reviewStart()"><div class="ic">🔁</div><b>ทวนข้อที่ยังไม่ได้ ('+t.miss+')</b><span>รวมทุกเคส ทำจนหมด</span></button>'+
+     '<button class="mode" onclick="refView()"><div class="ic">📌</div><b>Template + ตัวเลขต้องจำ</b><span>โครงตอบที่ใช้ซ้ำทุกเคส</span></button>'+
+     '<button class="mode" onclick="dxStart(true)"><div class="ic">🎯</div><b>Dx map เฉพาะที่ยังไม่ได้</b><span>'+(30-dxOk)+' เคส</span></button>'+
+     '</div>';
+  h+='<div class="panel"><div class="stat" style="margin-bottom:4px"><span>📝 ทำทีละเคส (กดเลขข้อเพื่อเริ่ม)</span></div>';
+  CASES.forEach(function(c){
+    var r=count(caseItems(c)), cls=r.ok===r.tot?'done':((r.ok||r.miss)?'part':'');
+    h+='<div class="case"><div class="no '+cls+'">'+c.n+'</div><div class="tx">'+esc(c.open)+'<small>'+esc(c.t)+' · ✓ '+r.ok+' ✗ '+r.miss+' / '+r.tot+'</small></div>'+
+       (r.miss?'<button class="chip bad" onclick="caseStart('+c.n+',true)">พลาด '+r.miss+'</button>':'')+
+       '<button class="chip on" onclick="caseStart('+c.n+',false)">เริ่ม</button></div>';
+  });
+  h+='</div><div style="text-align:center"><button class="reset" onclick="resetAll()">ล้างความคืบหน้าทั้งหมด</button></div>';
+  app.innerHTML=h; window.scrollTo(0,0);
+}
+function resetAll(){if(confirm('ล้างความคืบหน้าทั้งหมด?')){P={s:{},d:{}};save();home();}}
+
+// ---------- โหมดทำทีละเคส / ทวน ----------
+function caseStart(n,onlyMiss){
+  var c=CASES.filter(function(x){return x.n===n;})[0];
+  var list=caseItems(c); if(onlyMiss) list=list.filter(function(it){return st(it)===0;});
+  if(!list.length){home();return;}
+  S={view:'drill',kind:'case',c:c,list:list,i:0,rev:false,note:'',res:[]};
+  drill();
+}
+function reviewStart(){
+  var list=ALL.filter(function(it){return st(it)===0;});
+  if(!list.length){alert('ยังไม่มีข้อที่ทำพลาด 🎉');return;}
+  S={view:'drill',kind:'review',list:list,i:0,rev:false,note:'',res:[]};
+  drill();
+}
+function drill(){
+  var it=S.list[S.i], c=it.c, s=c.steps[it.k];
+  var h='<div class="top"><button class="back" onclick="home()">←</button><h2>'+
+        (S.kind==='case'?'ข้อ '+c.n+' · หน้า '+(it.k+1)+'/'+c.steps.length:'ทวน '+(S.i+1)+'/'+S.list.length+' · ข้อ '+c.n)+'</h2></div>';
+  h+='<div class="dots">'+S.list.map(function(x,j){var cls=j===S.i?'cur':(S.res[j]===1?'g':(S.res[j]===0?'r':''));return '<i class="'+cls+'"></i>';}).join('')+'</div>';
+  h+='<div class="open">'+esc(c.open)+'</div>';
+  var prev=c.steps.slice(0,it.k).filter(function(x){return x.i;});
+  if(prev.length) h+='<details class="prev"><summary>ข้อมูลจากหน้าก่อนๆ ('+prev.length+')</summary>'+prev.map(function(x){return '<div>'+md(x.i)+'</div>';}).join('')+'</details>';
+  if(s.i) h+='<div class="info"><span class="lab">ข้อมูลหน้านี้</span>'+md(s.i)+'</div>';
+  h+='<div class="q">'+esc(s.q)+'</div>';
+  if(!S.rev){
+    h+='<textarea id="note" placeholder="พิมพ์ keyword ที่นึกได้ (ไม่บังคับ) แล้วกดดูเฉลย">'+esc(S.note)+'</textarea>'+
+       '<button class="btn" onclick="reveal()">ดูเฉลย</button><div class="keys">Space = ดูเฉลย · 1 = ยังไม่ได้ · 2 = จำได้</div>';
+  }else{
+    if(S.note) h+='<div class="prev" style="margin-top:4px">คำตอบของเรา: '+esc(S.note)+'</div>';
+    h+='<div class="ans">'+md(s.a)+'</div>'+
+       '<div class="grade"><button class="no" onclick="grade(0)">✗ ยังไม่ได้</button><button class="ok" onclick="grade(1)">✓ จำได้</button></div>';
+  }
+  app.innerHTML=h; window.scrollTo(0,0);
+}
+function reveal(){var n=document.getElementById('note');S.note=n?n.value:'';S.rev=true;drill();}
+function grade(v){
+  var it=S.list[S.i]; P.s[sid(it.c,it.k)]=v; save(); S.res[S.i]=v;
+  if(S.i<S.list.length-1){S.i++;S.rev=false;S.note='';drill();} else summary();
+}
+function summary(){
+  var ok=S.res.filter(function(v){return v===1;}).length, tot=S.list.length, miss=tot-ok;
+  var h='<div class="top"><button class="back" onclick="home()">←</button><h2>สรุป</h2></div><div class="panel sum">';
+  if(S.kind==='case') h+='<div style="color:var(--dim)">ข้อ '+S.c.n+' ปลายทางคือ</div><div class="dx">'+esc(S.c.dx)+'</div><div style="color:var(--dim);font-size:13.5px">'+esc(S.c.clue)+'</div>';
+  h+='<div class="big">'+ok+' / '+tot+'</div><div style="color:var(--dim)">จำได้รอบนี้</div>';
+  if(miss) h+='<button class="btn" onclick="'+(S.kind==='case'?'caseStart('+S.c.n+',true)':'reviewStart()')+'">ทำข้อที่ยังไม่ได้อีกรอบ ('+miss+')</button>';
+  if(S.kind==='case'&&S.c.n<30) h+='<button class="btn ghost" onclick="caseStart('+(S.c.n+1)+',false)">ไปข้อ '+(S.c.n+1)+'</button>';
+  h+='<button class="btn ghost" onclick="home()">หน้าแรก</button></div>';
+  app.innerHTML=h; S.view='sum';
+}
+
+// ---------- Dx map ----------
+function dxStart(onlyMiss){
+  var deck=CASES.filter(function(c){return !onlyMiss||P.d[c.n]!==1;});
+  if(!deck.length){alert('Dx map ครบทุกเคสแล้ว 🎉');return;}
+  S={view:'dx',deck:shuffle(deck),i:0,rev:false,res:[]};
+  dxView();
+}
+function dxView(){
+  var c=S.deck[S.i];
+  var h='<div class="top"><button class="back" onclick="home()">←</button><h2>Dx map '+(S.i+1)+'/'+S.deck.length+'</h2></div>';
+  h+='<div class="dots">'+S.deck.map(function(x,j){var cls=j===S.i?'cur':(S.res[j]===1?'g':(S.res[j]===0?'r':''));return '<i class="'+cls+'"></i>';}).join('')+'</div>';
+  h+='<div class="panel"><div style="color:var(--dim);font-size:13px">ข้อ '+c.n+' · บรรทัดแรกของโจทย์</div><div class="q" style="margin-top:6px">'+esc(c.open)+'</div>';
+  if(!S.rev) h+='<button class="btn" onclick="S.rev=true;dxView()">ดู Dx</button><div class="keys">Space = ดู Dx · 1 / 2 = ให้คะแนน</div>';
+  else h+='<div class="dx">'+esc(c.dx)+'</div><div style="color:var(--dim);font-size:13.5px">'+esc(c.clue)+'</div>'+
+          '<div class="grade"><button class="no" onclick="dxGrade(0)">✗ ยังนึกไม่ออก</button><button class="ok" onclick="dxGrade(1)">✓ นึกออก</button></div>';
+  h+='</div>';
+  app.innerHTML=h; window.scrollTo(0,0);
+}
+function dxGrade(v){
+  var c=S.deck[S.i]; P.d[c.n]=v; save(); S.res[S.i]=v;
+  if(S.i<S.deck.length-1){S.i++;S.rev=false;dxView();}
+  else{
+    var ok=S.res.filter(function(x){return x===1;}).length, miss=S.deck.length-ok;
+    app.innerHTML='<div class="top"><button class="back" onclick="home()">←</button><h2>Dx map</h2></div><div class="panel sum"><div class="big">'+ok+' / '+S.deck.length+'</div>'+
+      (miss?'<button class="btn" onclick="dxStart(true)">ทวนที่ยังนึกไม่ออก ('+miss+')</button>':'')+
+      '<button class="btn ghost" onclick="dxStart(false)">สุ่มใหม่ทั้ง 30</button><button class="btn ghost" onclick="home()">หน้าแรก</button></div>';
+    S.view='dxsum';
+  }
+}
+
+// ---------- Template + ตัวเลข ----------
+function refView(){
+  S={view:'ref'};
+  var h='<div class="top"><button class="back" onclick="home()">←</button><h2>Template + ตัวเลขต้องจำ</h2></div>';
+  TEMPLATES.forEach(function(t){h+='<div class="panel ref"><h3>'+esc(t.h)+'</h3><div class="b">'+md(t.b)+'</div></div>';});
+  h+='<div class="panel ref"><h3>ตัวเลข / dose / สูตร</h3><table>'+NUMBERS.map(function(r){return '<tr><td>'+esc(r[0])+'</td><td>'+md(r[1])+'</td></tr>';}).join('')+'</table></div>';
+  app.innerHTML=h; window.scrollTo(0,0);
+}
+
+// ---------- คีย์ลัด ----------
+document.addEventListener('keydown',function(e){
+  var tag=(document.activeElement&&document.activeElement.tagName)||'';
+  if(tag==='TEXTAREA'){ if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();reveal();} return; }
+  if(S.view==='drill'){
+    if(!S.rev&&(e.key===' '||e.key==='Enter')){e.preventDefault();reveal();}
+    else if(S.rev&&e.key==='1') grade(0);
+    else if(S.rev&&e.key==='2') grade(1);
+  }else if(S.view==='dx'){
+    if(!S.rev&&(e.key===' '||e.key==='Enter')){e.preventDefault();S.rev=true;dxView();}
+    else if(S.rev&&e.key==='1') dxGrade(0);
+    else if(S.rev&&e.key==='2') dxGrade(1);
+  }
+});
+home();
+</script>
+</body>
+</html>
